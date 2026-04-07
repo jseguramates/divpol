@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Divisió de Polinomis — Pràctica Interactiva</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f1117;
+  --surface: #1a1d27;
+  --surface2: #22263a;
+  --border: #2e3352;
+  --accent: #6c8cff;
+  --accent2: #a78bfa;
+  --green: #34d399;
+  --red: #f87171;
+  --amber: #fbbf24;
+  --text: #e8eaf6;
+  --muted: #8b92b8;
+  --dividend: #93c5fd;
+  --divisor: #c4b5fd;
+  --quotient: #6ee7b7;
+  --remainder: #fca5a5;
+  --mono: 'JetBrains Mono', monospace;
+  --sans: 'Sora', sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1rem 4rem;
+}
+
+/* ── HEADER ── */
+.header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  animation: fadeDown 0.6s ease;
+}
+.header .badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 20px;
+  padding: 0.25rem 0.8rem;
+  margin-bottom: 0.8rem;
+}
+.header h1 {
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.3rem;
+}
+.header .subtitle {
+  font-size: 0.85rem;
+  color: var(--muted);
+  font-weight: 300;
+}
+
+/* ── PROBLEMA ── */
+.problema {
+  width: 100%;
+  max-width: 760px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  animation: fadeUp 0.5s ease 0.1s both;
+}
+.poly-label { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem; }
+.poly-expr { font-family: var(--mono); font-size: 1.1rem; font-weight: 600; }
+.poly-expr.dividend { color: var(--dividend); }
+.poly-expr.divisor  { color: var(--divisor); }
+.divider-sym { font-size: 2rem; color: var(--border); font-weight: 300; align-self: center; }
+
+/* ── PROGRESS ── */
+.progress-bar-wrap {
+  width: 100%;
+  max-width: 760px;
+  margin-bottom: 1.5rem;
+  animation: fadeUp 0.5s ease 0.15s both;
+}
+.progress-steps {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 0.5rem;
+}
+.step-dot {
+  height: 4px;
+  flex: 1;
+  border-radius: 2px;
+  background: var(--border);
+  transition: background 0.4s ease;
+}
+.step-dot.done   { background: var(--green); }
+.step-dot.active { background: var(--accent); }
+.progress-label { font-size: 0.75rem; color: var(--muted); text-align: right; }
+
+/* ── MAIN CARD ── */
+.main-card {
+  width: 100%;
+  max-width: 760px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+  animation: fadeUp 0.5s ease 0.2s both;
+}
+
+/* ── STEP HEADER ── */
+.step-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.2rem 1.8rem;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+}
+.step-num {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.9rem;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.step-title { font-weight: 600; font-size: 1rem; }
+.step-desc  { font-size: 0.82rem; color: var(--muted); margin-top: 0.1rem; }
+
+/* ── DIVISIO VISUAL ── */
+.division-visual {
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+}
+.div-layout {
+  display: grid;
+  grid-template-columns: auto 1px auto;
+  gap: 0;
+  min-width: 360px;
+  align-items: start;
+  font-family: var(--mono);
+}
+.div-left  { padding-right: 1.5rem; }
+.div-sep   { width: 1px; background: var(--muted); margin: 0 0.5rem; align-self: stretch; }
+.div-right { padding-left: 1.5rem; }
+
+.poly-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  min-height: 2rem;
+  margin-bottom: 0.15rem;
+  flex-wrap: wrap;
+}
+.term {
+  font-family: var(--mono);
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.1rem 0.2rem;
+  border-radius: 4px;
+  transition: all 0.3s;
+  white-space: nowrap;
+}
+.term.dim    { color: var(--muted); font-weight: 400; }
+.term.active { color: var(--text); }
+.term.hi-div { color: var(--dividend); }
+.term.hi-q   { color: var(--quotient); }
+.term.hi-sub { color: var(--amber); }
+.term.hi-rem { color: var(--remainder); }
+.term.hi-neg { color: #f9a8d4; } /* signe canviat */
+
+.div-line {
+  height: 2px;
+  background: var(--muted);
+  margin: 0.4rem 0;
+  border-radius: 1px;
+}
+.sign-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  min-height: 1.8rem;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.9rem;
+}
+
+/* ── INPUT AREA ── */
+.input-area {
+  padding: 1.5rem 2rem;
+}
+.input-question {
+  font-size: 0.9rem;
+  color: var(--text);
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+.input-question strong { color: var(--accent); }
+
+.input-row {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+.input-prefix {
+  font-family: var(--mono);
+  font-size: 1rem;
+  color: var(--muted);
+}
+.poly-input {
+  font-family: var(--mono);
+  font-size: 1rem;
+  font-weight: 600;
+  background: var(--bg);
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  padding: 0.5rem 0.9rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  width: 200px;
+}
+.poly-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(108,140,255,0.15);
+}
+.poly-input.ok    { border-color: var(--green); }
+.poly-input.error { border-color: var(--red); animation: shake 0.3s ease; }
+
+/* multi-input per termes separats */
+.terms-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+.term-input-wrap { display: flex; align-items: center; gap: 0.3rem; }
+.term-input-wrap .op { font-family: var(--mono); color: var(--muted); font-size: 1rem; }
+.term-input-wrap input {
+  font-family: var(--mono);
+  font-size: 1rem;
+  font-weight: 600;
+  background: var(--bg);
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  padding: 0.4rem 0.7rem;
+  outline: none;
+  width: 90px;
+  text-align: center;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.term-input-wrap input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(108,140,255,0.15); }
+.term-input-wrap input.ok    { border-color: var(--green); }
+.term-input-wrap input.error { border-color: var(--red); animation: shake 0.3s ease; }
+.term-input-wrap .term-label { font-size: 0.75rem; color: var(--muted); }
+
+/* ── BUTTONS ── */
+.btn-row { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-top: 0.5rem; }
+.btn {
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.55rem 1.3rem;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex; align-items: center; gap: 0.4rem;
+}
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+.btn-primary:hover { background: #8aa4ff; transform: translateY(-1px); }
+.btn-hint {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+}
+.btn-hint:hover { border-color: var(--accent2); color: var(--accent2); }
+.btn-next {
+  background: var(--green);
+  color: #0f1117;
+}
+.btn-next:hover { background: #6ee7b7; transform: translateY(-1px); }
+
+/* ── FEEDBACK ── */
+.feedback {
+  border-radius: 12px;
+  padding: 0.9rem 1.2rem;
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  display: none;
+  animation: fadeUp 0.3s ease;
+}
+.feedback.ok    { background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.3); color: #6ee7b7; }
+.feedback.error { background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); color: #fca5a5; }
+.feedback.hint  { background: rgba(167,139,250,0.1); border: 1px solid rgba(167,139,250,0.3); color: #c4b5fd; }
+.feedback.info  { background: rgba(108,140,255,0.1); border: 1px solid rgba(108,140,255,0.3); color: #93c5fd; }
+
+/* ── CHAT TUTOR ── */
+.chat-section {
+  border-top: 1px solid var(--border);
+  padding: 1.2rem 2rem;
+}
+.chat-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.2s;
+  background: none;
+  border: none;
+  font-family: var(--sans);
+}
+.chat-toggle:hover { color: var(--accent2); }
+.chat-toggle .icon { font-size: 1rem; }
+.chat-box {
+  display: none;
+  margin-top: 1rem;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.chat-box.open { display: flex; animation: fadeUp 0.3s ease; }
+.chat-input-row {
+  display: flex;
+  gap: 0.6rem;
+}
+.chat-input {
+  flex: 1;
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  padding: 0.6rem 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.chat-input:focus { border-color: var(--accent2); }
+.chat-send {
+  background: var(--accent2);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+}
+.chat-send:hover { background: #c4b5fd; }
+.chat-msgs { display: flex; flex-direction: column; gap: 0.5rem; max-height: 200px; overflow-y: auto; }
+.chat-msg {
+  border-radius: 10px;
+  padding: 0.6rem 0.9rem;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  animation: fadeUp 0.2s ease;
+}
+.chat-msg.user { background: var(--surface2); color: var(--muted); align-self: flex-end; max-width: 85%; }
+.chat-msg.tutor { background: rgba(167,139,250,0.12); border: 1px solid rgba(167,139,250,0.2); color: var(--text); max-width: 95%; }
+
+/* ── FINAL ── */
+.final-panel {
+  display: none;
+  width: 100%;
+  max-width: 760px;
+  margin-top: 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--green);
+  border-radius: 20px;
+  padding: 2rem;
+  text-align: center;
+  animation: fadeUp 0.5s ease;
+}
+.final-panel.show { display: block; }
+.final-icon { font-size: 3rem; margin-bottom: 1rem; }
+.final-title { font-size: 1.5rem; font-weight: 700; color: var(--green); margin-bottom: 0.5rem; }
+.final-text { color: var(--muted); font-size: 0.9rem; margin-bottom: 1.5rem; line-height: 1.7; }
+.result-box {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.2rem 1.5rem;
+  display: inline-block;
+  text-align: left;
+  font-family: var(--mono);
+}
+.result-line { font-size: 1rem; margin-bottom: 0.5rem; }
+.result-line:last-child { margin-bottom: 0; }
+.result-q { color: var(--quotient); }
+.result-r { color: var(--remainder); }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeDown { from { opacity: 0; transform: translateY(-15px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeUp   { from { opacity: 0; transform: translateY(12px);  } to { opacity: 1; transform: translateY(0); } }
+@keyframes shake    { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+@keyframes pulse    { 0%,100%{opacity:1} 50%{opacity:0.5} }
+
+.loading-dots span { animation: pulse 1.2s ease infinite; }
+.loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+.loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="badge">3r ESO · Matemàtiques</div>
+  <h1>Divisió de Polinomis</h1>
+  <div class="subtitle">Mètode estàndard (divisió llarga) · Pas a pas</div>
+</div>
+
+<!-- Enunciat -->
+<div class="problema">
+  <div>
+    <div class="poly-label">Dividend P(x)</div>
+    <div class="poly-expr dividend">6x³ − x² − 25x + 15</div>
+  </div>
+  <div class="divider-sym">÷</div>
+  <div>
+    <div class="poly-label">Divisor Q(x)</div>
+    <div class="poly-expr divisor">2x² + 3x − 4</div>
+  </div>
+</div>
+
+<!-- Progress -->
+<div class="progress-bar-wrap">
+  <div class="progress-steps" id="progressSteps"></div>
+  <div class="progress-label" id="progressLabel">Pas 1 de 6</div>
+</div>
+
+<!-- Targeta principal -->
+<div class="main-card" id="mainCard">
+  <div class="step-header">
+    <div class="step-num" id="stepNum">1</div>
+    <div>
+      <div class="step-title" id="stepTitle"></div>
+      <div class="step-desc"  id="stepDesc"></div>
+    </div>
+  </div>
+
+  <!-- Visualització divisió -->
+  <div class="division-visual" id="divVisual">
+    <div class="div-layout">
+      <div class="div-left" id="divLeft"></div>
+      <div class="div-sep"></div>
+      <div class="div-right" id="divRight"></div>
+    </div>
+  </div>
+
+  <!-- Inputs -->
+  <div class="input-area" id="inputArea"></div>
+
+  <!-- Tutor chat -->
+  <div class="chat-section">
+    <button class="chat-toggle" onclick="toggleChat()">
+      <span class="icon">💬</span>
+      <span>No sé com seguir... pregunta al tutor</span>
+    </button>
+    <div class="chat-box" id="chatBox">
+      <div class="chat-msgs" id="chatMsgs"></div>
+      <div class="chat-input-row">
+        <input class="chat-input" id="chatInput" placeholder="Escriu la teva pregunta..." onkeydown="if(event.key==='Enter')sendChat()">
+        <button class="chat-send" onclick="sendChat()">→</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Panel final -->
+<div class="final-panel" id="finalPanel">
+  <div class="final-icon">🎉</div>
+  <div class="final-title">Molt bé! Divisió completada!</div>
+  <div class="final-text">
+    Has completat la divisió de polinomis pas a pas.<br>
+    Recorda verificar: <strong>Dividend = Divisor × Quocient + Resta</strong>
+  </div>
+  <div class="result-box">
+    <div class="result-line">Dividend: <span style="color:var(--dividend)">6x³ − x² − 25x + 15</span></div>
+    <div class="result-line">Divisor:  <span style="color:var(--divisor)">2x² + 3x − 4</span></div>
+    <div class="result-line" style="margin-top:0.8rem">Quocient: <span class="result-q">3x − 5</span></div>
+    <div class="result-line">Resta:    <span class="result-r">2x − 5</span></div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// ESTAT
+// ═══════════════════════════════════════════════════════════
+const TOTAL_STEPS = 6;
+let currentStep = 1;
+let chatOpen = false;
+
+// ═══════════════════════════════════════════════════════════
+// DEFINICIÓ DELS PASSOS
+// ═══════════════════════════════════════════════════════════
+const steps = [
+  // PAS 1: Dividim el terme líder
+  {
+    num: 1,
+    title: "Dividim els termes líders",
+    desc: "El terme de grau màxim del dividend entre el terme de grau màxim del divisor",
+    render: renderStep1,
+    hints: [
+      "El terme líder del dividend és 6x³ i el del divisor és 2x².",
+      "Per dividir potències de la mateixa base: divides els coeficients i restes els exponents.",
+      "6 ÷ 2 = 3 i x³ ÷ x² = x^(3-2) = x¹. Per tant, el resultat és 3x."
+    ],
+    tutorContext: "Estem al pas 1: dividir 6x³ entre 2x². Els alumnes han d'arribar a 3x. Si pregunten per a qualsevol dubte, ajuda'ls sense donar la resposta directament."
+  },
+  // PAS 2: Multipliquem per tot el divisor
+  {
+    num: 2,
+    title: "Multipliquem el terme obtingut pel divisor",
+    desc: "Multiplica 3x per cada terme de (2x² + 3x − 4)",
+    render: renderStep2,
+    hints: [
+      "Has de multiplicar 3x per cadascun dels tres termes del divisor.",
+      "3x · 2x² = ?  Multiplica els coeficients (3·2=6) i suma els exponents (x¹⁺² = x³).",
+      "3x · 2x² = 6x³ ;  3x · 3x = 9x² ;  3x · (−4) = −12x"
+    ],
+    tutorContext: "Estem al pas 2: multiplicar 3x per (2x² + 3x − 4). El resultat ha de ser 6x³ + 9x² − 12x. Guia sense donar la resposta."
+  },
+  // PAS 3: Canviem el signe i restem
+  {
+    num: 3,
+    title: "Canviem el signe i restem",
+    desc: "Escriu el producte amb el signe canviat sota el dividend i suma columna a columna",
+    render: renderStep3,
+    hints: [
+      "Canviar el signe significa: 6x³ passa a −6x³, 9x² passa a −9x², −12x passa a +12x.",
+      "Ara suma columna a columna: 6x³ + (−6x³) = 0x³ (desapareix!), −x² + (−9x²) = ?",
+      "−x² − 9x² = −10x² ;  −25x + 12x = −13x ;  el terme independent +15 baixa."
+    ],
+    tutorContext: "Estem al pas 3: canviar el signe de (6x³+9x²−12x) i restar. El residu parcial ha de ser −10x² − 13x + 15. Guia sense donar la resposta directa."
+  },
+  // PAS 4: Segon terme del quocient
+  {
+    num: 4,
+    title: "Segon terme del quocient",
+    desc: "Divideix el terme líder del residu parcial entre el terme líder del divisor",
+    render: renderStep4,
+    hints: [
+      "Ara el 'nou dividend' és −10x² − 13x + 15. El seu terme líder és −10x².",
+      "Divides −10x² entre 2x²: dividides els coeficients i restes els exponents.",
+      "−10 ÷ 2 = −5 i x² ÷ x² = x⁰ = 1. Per tant, el segon terme del quocient és −5."
+    ],
+    tutorContext: "Estem al pas 4: dividir −10x² entre 2x². El resultat és −5. Guia sense donar la resposta."
+  },
+  // PAS 5: Multipliquem per tot el divisor (2a volta)
+  {
+    num: 5,
+    title: "Tornem a multiplicar pel divisor",
+    desc: "Multiplica −5 per cada terme de (2x² + 3x − 4)",
+    render: renderStep5,
+    hints: [
+      "Ara multipliques −5 (un nombre, sense x) per cada terme del divisor.",
+      "−5 · 2x² = −10x² ;  −5 · 3x = ? ;  −5 · (−4) = ?",
+      "−5 · 2x² = −10x² ;  −5 · 3x = −15x ;  −5 · (−4) = +20"
+    ],
+    tutorContext: "Estem al pas 5: multiplicar −5 per (2x²+3x−4). El resultat és −10x²−15x+20. Guia sense donar la resposta."
+  },
+  // PAS 6: Resta final
+  {
+    num: 6,
+    title: "Residu final",
+    desc: "Canvia el signe i suma per obtenir la resta. Comprova que el grau és menor que el divisor",
+    render: renderStep6,
+    hints: [
+      "Canvia el signe de (−10x² − 15x + 20): passa a +10x² + 15x − 20.",
+      "Suma columna a columna: −10x² + 10x² = 0 ;  −13x + 15x = ? ;  15 + (−20) = ?",
+      "−13x + 15x = 2x i 15 − 20 = −5. La resta és 2x − 5, de grau 1 < grau(divisor)=2. ✓"
+    ],
+    tutorContext: "Estem al pas 6 (final): restar per obtenir la resta 2x − 5. El quocient és 3x − 5 i la resta 2x − 5. Guia sense donar la resposta directa."
+  }
+];
+
+// ═══════════════════════════════════════════════════════════
+// RENDER VISUAL DE LA DIVISIÓ (progressiva)
+// ═══════════════════════════════════════════════════════════
+
+function term(text, cls='active') {
+  return `<span class="term ${cls}">${text}</span>`;
+}
+
+function renderDivision(step) {
+  const left = document.getElementById('divLeft');
+  const right = document.getElementById('divRight');
+
+  // Esquerra: el dividend i les operacions
+  let leftHTML = '';
+  let rightHTML = '';
+
+  // Fila 0: dividend sempre visible
+  leftHTML += `<div class="poly-row">
+    ${term('6x³','hi-div')} ${term('−','dim')} ${term('x²','hi-div')} ${term('−','dim')} ${term('25x','hi-div')} ${term('+','dim')} ${term('15','hi-div')}
+  </div>`;
+
+  if (step >= 2) {
+    // Fila 1: producte 3x × divisor (amb signe normal)
+    leftHTML += `<div class="sign-row">&nbsp;${term('−','dim')}&nbsp;(</div>`;
+    leftHTML += `<div class="poly-row" style="padding-left:1.5rem">
+      ${term('6x³','hi-sub')} ${term('+','dim')} ${term('9x²','hi-sub')} ${term('−','dim')} ${term('12x','hi-sub')}
+    </div>`;
+    leftHTML += `<div class="sign-row">)</div>`;
+  }
+
+  if (step >= 3) {
+    leftHTML += `<div class="div-line"></div>`;
+    leftHTML += `<div class="poly-row">
+      ${term('−10x²','hi-div')} ${term('−','dim')} ${term('13x','hi-div')} ${term('+','dim')} ${term('15','hi-div')}
+    </div>`;
+  }
+
+  if (step >= 5) {
+    leftHTML += `<div class="sign-row">&nbsp;${term('−','dim')}&nbsp;(</div>`;
+    leftHTML += `<div class="poly-row" style="padding-left:1.5rem">
+      ${term('−10x²','hi-sub')} ${term('−','dim')} ${term('15x','hi-sub')} ${term('+','dim')} ${term('20','hi-sub')}
+    </div>`;
+    leftHTML += `<div class="sign-row">)</div>`;
+  }
+
+  if (step >= 6) {
+    leftHTML += `<div class="div-line"></div>`;
+    leftHTML += `<div class="poly-row">
+      ${term('2x','hi-rem')} ${term('−','dim')} ${term('5','hi-rem')}
+      &nbsp;<span style="font-size:0.75rem;color:var(--green);margin-left:0.5rem">← Resta</span>
+    </div>`;
+  }
+
+  // Dreta: divisor i quocient
+  rightHTML += `<div class="poly-row">
+    ${term('2x²','dim')} ${term('+','dim')} ${term('3x','dim')} ${term('−','dim')} ${term('4','dim')}
+  </div>`;
+  rightHTML += `<div class="div-line" style="margin:0.2rem 0 0.4rem"></div>`;
+
+  if (step >= 1) {
+    rightHTML += `<div class="poly-row">${term('3x','hi-q')}`;
+    if (step >= 4) rightHTML += `&nbsp;${term('−','dim')}&nbsp;${term('5','hi-q')}`;
+    rightHTML += `</div>`;
+  }
+
+  left.innerHTML = leftHTML;
+  right.innerHTML = rightHTML;
+}
+
+// ═══════════════════════════════════════════════════════════
+// RENDERS ESPECÍFICS DE CADA PAS
+// ═══════════════════════════════════════════════════════════
+
+function renderStep1() {
+  renderDivision(0);
+  document.getElementById('inputArea').innerHTML = `
+    <div class="input-question">
+      Quin és el primer terme del quocient?<br>
+      Divideix el terme líder del dividend entre el terme líder del divisor:<br>
+      <strong>6x³ ÷ 2x²</strong> = ?
+    </div>
+    <div class="input-row">
+      <span class="input-prefix">Primer terme:</span>
+      <input class="poly-input" id="inp1" placeholder="ex: 3x" autocomplete="off">
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="checkStep1()">✓ Comprovar</button>
+      <button class="btn btn-hint" onclick="showHint(0)">💡 Pista</button>
+    </div>
+    <div class="feedback" id="fb1"></div>
+  `;
+  document.getElementById('inp1').focus();
+}
+
+function checkStep1() {
+  const val = normalize(document.getElementById('inp1').value);
+  const ok = ['3x','3x^1'].includes(val);
+  if (ok) {
+    setOk('inp1'); showFeedback('fb1', 'ok', '✓ Perfecte! 6 ÷ 2 = 3 i x³ ÷ x² = x^(3−2) = x. El primer terme del quocient és <strong>3x</strong>.');
+    renderDivision(1);
+    showNextBtn('fb1', 2);
+  } else {
+    setError('inp1'); showFeedback('fb1', 'error', '✗ No és correcte. Recorda: divides els coeficients i restes els exponents de x.');
+  }
+}
+
+function renderStep2() {
+  renderDivision(1);
+  document.getElementById('inputArea').innerHTML = `
+    <div class="input-question">
+      Multiplica <strong>3x</strong> per tot el divisor <strong>(2x² + 3x − 4)</strong>.<br>
+      Escriu cada terme del producte:
+    </div>
+    <div class="terms-row">
+      <div class="term-input-wrap">
+        <span class="term-label">3x · 2x² =</span>
+        <input id="t2a" placeholder="?" autocomplete="off">
+        <span class="op">&nbsp;</span>
+      </div>
+      <div class="term-input-wrap">
+        <span class="term-label">3x · 3x =</span>
+        <input id="t2b" placeholder="?" autocomplete="off">
+        <span class="op">&nbsp;</span>
+      </div>
+      <div class="term-input-wrap">
+        <span class="term-label">3x · (−4) =</span>
+        <input id="t2c" placeholder="?" autocomplete="off">
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="checkStep2()">✓ Comprovar</button>
+      <button class="btn btn-hint" onclick="showHint(1)">💡 Pista</button>
+    </div>
+    <div class="feedback" id="fb2"></div>
+  `;
+}
+
+function checkStep2() {
+  const a = normalize(document.getElementById('t2a').value);
+  const b = normalize(document.getElementById('t2b').value);
+  const c = normalize(document.getElementById('t2c').value);
+  const okA = ['6x^3','6x3'].includes(a);
+  const okB = ['9x^2','9x2'].includes(b);
+  const okC = ['-12x','-12x^1'].includes(c);
+  const ok = okA && okB && okC;
+  if (!okA) setError('t2a'); else setOk('t2a');
+  if (!okB) setError('t2b'); else setOk('t2b');
+  if (!okC) setError('t2c'); else setOk('t2c');
+  if (ok) {
+    showFeedback('fb2','ok','✓ Excel·lent! 3x · 2x² = 6x³ ;  3x · 3x = 9x² ;  3x · (−4) = −12x. El producte és <strong>6x³ + 9x² − 12x</strong>.');
+    renderDivision(2);
+    showNextBtn('fb2', 3);
+  } else {
+    let errors = [];
+    if (!okA) errors.push('3x · 2x²: multiplica 3·2=6 i suma els exponents 1+2=3 → 6x³');
+    if (!okB) errors.push('3x · 3x: multiplica 3·3=9 i suma 1+1=2 → 9x²');
+    if (!okC) errors.push('3x · (−4): multiplica 3·(−4)=−12 i queda x¹ → −12x');
+    showFeedback('fb2','error','✗ Algun terme no és correcte:<br>• ' + errors.join('<br>• '));
+  }
+}
+
+function renderStep3() {
+  renderDivision(2);
+  document.getElementById('inputArea').innerHTML = `
+    <div class="input-question">
+      Ara posem el producte <strong>(6x³ + 9x² − 12x)</strong> amb el signe canviat sota el dividend i sumem columna a columna.<br>
+      Escriu els termes del residu parcial (el nou "dividend"):
+    </div>
+    <div class="terms-row">
+      <div class="term-input-wrap">
+        <span class="term-label">terme x²:</span>
+        <input id="t3a" placeholder="?" autocomplete="off">
+      </div>
+      <div class="term-input-wrap">
+        <span class="term-label">terme x:</span>
+        <input id="t3b" placeholder="?" autocomplete="off">
+      </div>
+      <div class="term-input-wrap">
+        <span class="term-label">terme ind.:</span>
+        <input id="t3c" placeholder="?" autocomplete="off">
+      </div>
+    </div>
+    <div style="font-size:0.8rem;color:var(--muted);margin-bottom:0.8rem">Escriu cada terme amb la seva variable, p.ex: <code style="color:var(--accent2)">-10x2</code> o <code style="color:var(--accent2)">15</code></div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="checkStep3()">✓ Comprovar</button>
+      <button class="btn btn-hint" onclick="showHint(2)">💡 Pista</button>
+    </div>
+    <div class="feedback" id="fb3"></div>
+  `;
+}
+
+function checkStep3() {
+  const a = normalize(document.getElementById('t3a').value);
+  const b = normalize(document.getElementById('t3b').value);
+  const c = normalize(document.getElementById('t3c').value);
+  const okA = ['-10x^2','-10x2'].includes(a);
+  const okB = ['-13x','-13x^1'].includes(b);
+  const okC = ['15','15x^0'].includes(c);
+  if (!okA) setError('t3a'); else setOk('t3a');
+  if (!okB) setError('t3b'); else setOk('t3b');
+  if (!okC) setError('t3c'); else setOk('t3c');
+  if (okA && okB && okC) {
+    showFeedback('fb3','ok','✓ Molt bé! Amb el signe canviat: −6x³+6x³=0 (desapareix!), −x²−9x²=−10x², −25x+12x=−13x, i el +15 baixa. Residu parcial: <strong>−10x² − 13x + 15</strong>.');
+    renderDivision(3);
+    showNextBtn('fb3', 4);
+  } else {
+    let errors = [];
+    if (!okA) errors.push('Columna x²: −x² + (−9x²) = ? Recorda que canvies +9x² a −9x²');
+    if (!okB) errors.push('Columna x: −25x + 12x = ? Recorda que canvies −12x a +12x');
+    if (!okC) errors.push('Terme independent: el +15 del dividend baixa directament');
+    showFeedback('fb3','error','✗ Revisa:<br>• ' + errors.join('<br>• '));
+  }
+}
+
+function renderStep4() {
+  renderDivision(3);
+  document.getElementById('inputArea').innerHTML = `
+    <div class="input-question">
+      El nou dividend és <strong>−10x² − 13x + 15</strong>.<br>
+      Quin és el segon terme del quocient?<br>
+      Divideix <strong>−10x² ÷ 2x²</strong> = ?
+    </div>
+    <div class="input-row">
+      <span class="input-prefix">Segon terme:</span>
+      <input class="poly-input" id="inp4" placeholder="ex: -5" autocomplete="off" style="width:140px">
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="checkStep4()">✓ Comprovar</button>
+      <button class="btn btn-hint" onclick="showHint(3)">💡 Pista</button>
+    </div>
+    <div class="feedback" id="fb4"></div>
+  `;
+  document.getElementById('inp4').focus();
+}
+
+function checkStep4() {
+  const val = normalize(document.getElementById('inp4').value);
+  const ok = ['-5','-5x^0'].includes(val);
+  if (ok) {
+    setOk('inp4');
+    showFeedback('fb4','ok','✓ Correcte! −10 ÷ 2 = −5 i x² ÷ x² = x⁰ = 1. El segon terme del quocient és <strong>−5</strong>. El quocient parcial és 3x − 5.');
+    renderDivision(4);
+    showNextBtn('fb4', 5);
+  } else {
+    setError('inp4');
+    showFeedback('fb4','error','✗ No és correcte. Divideix el coeficient −10 entre 2, i els exponents x² ÷ x² = ?');
+  }
+}
+
+function renderStep5() {
+  renderDivision(4);
+  document.getElementById('inputArea').innerHTML = `
+    <div class="input-question">
+      Multiplica <strong>−5</strong> per tot el divisor <strong>(2x² + 3x − 4)</strong>.<br>
+      Escriu cada terme del producte:
+    </div>
+    <div class="terms-row">
+      <div class="term-input-wrap">
+        <span class="term-label">−5 · 2x² =</span>
+        <input id="t5a" placeholder="?" autocomplete="off">
+      </div>
+      <div class="term-input-wrap">
+        <span class="term-label">−5 · 3x =</span>
+        <input id="t5b" placeholder="?" autocomplete="off">
+      </div>
+      <div class="term-input-wrap">
+        <span class="term-label">−5 · (−4) =</span>
+        <input id="t5c" placeholder="?" autocomplete="off">
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="checkStep5()">✓ Comprovar</button>
+      <button class="btn btn-hint" onclick="showHint(4)">💡 Pista</button>
+    </div>
+    <div class="feedback" id="fb5"></div>
+  `;
+}
+
+function checkStep5() {
+  const a = normalize(document.getElementById('t5a').value);
+  const b = normalize(document.getElementById('t5b').value);
+  const c = normalize(document.getElementById('t5c').value);
+  const okA = ['-10x^2','-10x2'].includes(a);
+  const okB = ['-15x','-15x^1'].includes(b);
+  const okC = ['20','20x^0'].includes(c);
+  if (!okA) setError('t5a'); else setOk('t5a');
+  if (!okB) setError('t5b'); else setOk('t5b');
+  if (!okC) setError('t5c'); else setOk('t5c');
+  if (okA && okB && okC) {
+    showFeedback('fb5','ok','✓ Perfecte! −5 · 2x² = −10x² ;  −5 · 3x = −15x ;  −5 · (−4) = +20. El producte és <strong>−10x² − 15x + 20</strong>.');
+    renderDivision(5);
+    showNextBtn('fb5', 6);
+  } else {
+    let errors = [];
+    if (!okA) errors.push('−5 · 2x²: (−5)·2=−10, queda x² → −10x²');
+    if (!okB) errors.push('−5 · 3x: (−5)·3=−15, queda x → −15x');
+    if (!okC) errors.push('−5 · (−4): negatiu × negatiu = positiu → +20');
+    showFeedback('fb5','error','✗ Revisa:<br>• ' + errors.join('<br>• '));
+  }
+}
+
+function renderStep6() {
+  renderDivision(5);
+  document.getElementById('inputArea').innerHTML = `
+    <div class="input-question">
+      Última operació! Canvia el signe de <strong>(−10x² − 15x + 20)</strong> i suma a <strong>(−10x² − 13x + 15)</strong>.<br>
+      Escriu la <strong>resta final</strong> R(x):
+    </div>
+    <div class="terms-row">
+      <div class="term-input-wrap">
+        <span class="term-label">terme x:</span>
+        <input id="t6a" placeholder="?" autocomplete="off">
+      </div>
+      <div class="term-input-wrap">
+        <span class="term-label">terme ind.:</span>
+        <input id="t6b" placeholder="?" autocomplete="off">
+      </div>
+    </div>
+    <div style="font-size:0.8rem;color:var(--muted);margin-bottom:0.8rem">Comprova que el grau de la resta és menor que el grau del divisor (grau 2).</div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="checkStep6()">✓ Comprovar</button>
+      <button class="btn btn-hint" onclick="showHint(5)">💡 Pista</button>
+    </div>
+    <div class="feedback" id="fb6"></div>
+  `;
+}
+
+function checkStep6() {
+  const a = normalize(document.getElementById('t6a').value);
+  const b = normalize(document.getElementById('t6b').value);
+  const okA = ['2x','2x^1'].includes(a);
+  const okB = ['-5','−5'].includes(b);
+  if (!okA) setError('t6a'); else setOk('t6a');
+  if (!okB) setError('t6b'); else setOk('t6b');
+  if (okA && okB) {
+    showFeedback('fb6','ok','✓ Excel·lent! −10x²+10x²=0 ;  −13x+15x=2x ;  15−20=−5. La resta és <strong>2x − 5</strong>, de grau 1 &lt; 2 (grau del divisor). ✓');
+    renderDivision(6);
+    setTimeout(() => showFinal(), 1200);
+  } else {
+    let errors = [];
+    if (!okA) errors.push('Columna x: −13x + 15x = ? (el signe canviat de −15x és +15x)');
+    if (!okB) errors.push('Columna ind.: 15 + (−20) = ? (el signe canviat de +20 és −20)');
+    showFeedback('fb6','error','✗ Revisa:<br>• ' + errors.join('<br>• '));
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// UTILITATS
+// ═══════════════════════════════════════════════════════════
+
+function normalize(s) {
+  return s.trim()
+    .replace(/\s+/g,'')
+    .replace(/\^/,'')
+    .replace(/[·×]/g,'*')
+    .replace(/−/g,'-')
+    .replace(/x1\b/,'x')
+    .toLowerCase();
+}
+
+function setOk(id) {
+  const el = document.getElementById(id);
+  if (el) { el.classList.remove('error'); el.classList.add('ok'); }
+}
+function setError(id) {
+  const el = document.getElementById(id);
+  if (el) { el.classList.remove('ok'); el.classList.add('error');
+    el.style.animation='none'; requestAnimationFrame(()=>{ el.style.animation=''; }); }
+}
+
+function showFeedback(id, type, html) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.className = `feedback ${type}`;
+  el.innerHTML = html;
+  el.style.display = 'block';
+}
+
+function showNextBtn(fbId, nextStep) {
+  const el = document.getElementById(fbId);
+  if (!el) return;
+  const btn = document.createElement('button');
+  btn.className = 'btn btn-next';
+  btn.style.marginTop = '0.8rem';
+  btn.innerHTML = nextStep <= TOTAL_STEPS ? `→ Pas ${nextStep}` : '🎉 Finalitzar';
+  btn.onclick = () => goToStep(nextStep);
+  el.appendChild(document.createElement('br'));
+  el.appendChild(btn);
+}
+
+let hintIdx = 0;
+function showHint(stepIdx) {
+  const hints = steps[stepIdx].hints;
+  const fb = document.getElementById('fb' + steps[stepIdx].num);
+  if (!fb) return;
+  if (fb.style.display === 'block' && fb.classList.contains('hint')) {
+    hintIdx = (hintIdx + 1) % hints.length;
+  } else {
+    hintIdx = 0;
+  }
+  showFeedback('fb' + steps[stepIdx].num, 'hint', '💡 ' + hints[hintIdx] + (hints.length > 1 ? `<br><small style="opacity:0.7">Pista ${hintIdx+1}/${hints.length} — torna a prémer per a la següent</small>` : ''));
+}
+
+function goToStep(n) {
+  currentStep = n;
+  updateProgress();
+  const s = steps[n-1];
+  document.getElementById('stepNum').textContent = n;
+  document.getElementById('stepTitle').textContent = s.title;
+  document.getElementById('stepDesc').textContent = s.desc;
+  document.getElementById('chatBox').classList.remove('open');
+  chatOpen = false;
+  s.render();
+  document.getElementById('mainCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function updateProgress() {
+  const wrap = document.getElementById('progressSteps');
+  wrap.innerHTML = '';
+  for (let i = 1; i <= TOTAL_STEPS; i++) {
+    const d = document.createElement('div');
+    d.className = 'step-dot' + (i < currentStep ? ' done' : i === currentStep ? ' active' : '');
+    wrap.appendChild(d);
+  }
+  document.getElementById('progressLabel').textContent = `Pas ${currentStep} de ${TOTAL_STEPS}`;
+}
+
+function showFinal() {
+  document.getElementById('mainCard').style.display = 'none';
+  const fp = document.getElementById('finalPanel');
+  fp.classList.add('show');
+  fp.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  const dots = document.getElementById('progressSteps');
+  dots.querySelectorAll('.step-dot').forEach(d => { d.classList.remove('active'); d.classList.add('done'); });
+  document.getElementById('progressLabel').textContent = '✓ Completat!';
+}
+
+// ═══════════════════════════════════════════════════════════
+// TUTOR CHAT
+// ═══════════════════════════════════════════════════════════
+
+function toggleChat() {
+  chatOpen = !chatOpen;
+  document.getElementById('chatBox').classList.toggle('open', chatOpen);
+  if (chatOpen && document.getElementById('chatMsgs').children.length === 0) {
+    addTutorMsg('Hola! Soc el teu tutor de matemàtiques. En quin pas estàs? Tens alguna pregunta sobre el que estàs fent?');
+  }
+  if (chatOpen) document.getElementById('chatInput').focus();
+}
+
+function addUserMsg(text) {
+  const div = document.createElement('div');
+  div.className = 'chat-msg user';
+  div.textContent = text;
+  document.getElementById('chatMsgs').appendChild(div);
+  scrollChat();
+}
+
+function addTutorMsg(text) {
+  const div = document.createElement('div');
+  div.className = 'chat-msg tutor';
+  div.innerHTML = text;
+  document.getElementById('chatMsgs').appendChild(div);
+  scrollChat();
+}
+
+function scrollChat() {
+  const m = document.getElementById('chatMsgs');
+  m.scrollTop = m.scrollHeight;
+}
+
+function showTyping() {
+  const div = document.createElement('div');
+  div.className = 'chat-msg tutor';
+  div.id = 'typingIndicator';
+  div.innerHTML = '<span class="loading-dots"><span>·</span><span>·</span><span>·</span></span>';
+  document.getElementById('chatMsgs').appendChild(div);
+  scrollChat();
+  return div;
+}
+
+async function sendChat() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  addUserMsg(text);
+  const typing = showTyping();
+
+  const stepInfo = steps[currentStep - 1];
+  const systemPrompt = `Ets un tutor de matemàtiques de 3r d'ESO, simpàtic i pacient. ${stepInfo.tutorContext}
+Respon en català, de forma breu (màxim 3 frases). Guia l'alumne fent-li preguntes o donant pistes, però NO donis mai la resposta directa. Si l'alumne ja té la resposta bé, anima'l.`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: text }]
+      })
+    });
+    const data = await res.json();
+    typing.remove();
+    const reply = data.content?.[0]?.text || 'Disculpa, no he pogut respondre. Prova de nou!';
+    addTutorMsg(reply);
+  } catch(e) {
+    typing.remove();
+    // Fallback local si no hi ha API
+    const fallbacks = {
+      1: ['Mira el terme de grau màxim del dividend (6x³) i el del divisor (2x²). Quan divideixes potències, els coeficients es divideixen i els exponents es resten. Quant és 6÷2?', 'Pensa: x³ ÷ x² = x^(3−2) = ?'],
+      2: ['Aplica la propietat distributiva: multiplica 3x per cada terme per separat. Comença pel primer: 3x · 2x².', 'Quan multipliques monomis, multipliques els coeficients i sumes els exponents. Quant és 3·2 i 1+2?'],
+      3: ['Recorda: "posar amb signe canviat" significa canviar tots els signes del producte. Després sumes columna a columna.', 'La columna x³: 6x³ + (−6x³) = 0. I la columna x²: −x² + (−9x²) = ?'],
+      4: ['Ara el teu nou dividend és −10x². Has de dividir −10x² entre 2x².', 'Divideix els coeficients: −10 ÷ 2 = ? I els exponents: x² ÷ x² = x^(2−2) = x⁰ = ?'],
+      5: ['Multiplica −5 (sense cap x) per cada terme del divisor. Recorda el signe: negatiu × positiu = ?', 'Pensa en −5 · (−4): negatiu per negatiu surt...?'],
+      6: ['Canvia el signe de tot el producte i suma columna a columna. La columna x²: −10x² + 10x² = ?', 'Columna x: −13x + 15x = ? i columna ind.: 15 − 20 = ?']
+    };
+    const opts = fallbacks[currentStep] || ['Pensa bé en el pas que estàs fent. Quina operació has de realitzar?'];
+    addTutorMsg(opts[Math.floor(Math.random() * opts.length)]);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════
+updateProgress();
+goToStep(1);
+</script>
+</body>
+</html>
