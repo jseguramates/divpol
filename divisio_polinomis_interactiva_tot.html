@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ruffini Interactiu — Exercici 10</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f1117; --surface: #1a1d27; --surface2: #22263a; --border: #2e3352;
+  --accent: #6c8cff; --accent2: #a78bfa; --green: #34d399; --red: #f87171;
+  --amber: #fbbf24; --text: #e8eaf6; --muted: #8b92b8;
+  --c-coef: #93c5fd; --c-inter: #fde68a; --c-res: #6ee7b7; --c-rem: #fca5a5;
+  --mono: 'JetBrains Mono', monospace; --sans: 'Sora', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--sans); background: var(--bg); color: var(--text);
+  min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 1.5rem 1rem 4rem; }
+
+/* HEADER */
+.header { text-align: center; margin-bottom: 1.5rem; animation: fadeDown .5s ease; }
+.badge { display: inline-block; font-size: .7rem; font-weight: 600; letter-spacing: .15em;
+  text-transform: uppercase; color: var(--accent); border: 1px solid var(--accent);
+  border-radius: 20px; padding: .25rem .8rem; margin-bottom: .6rem; }
+.header h1 { font-size: clamp(1.3rem,4vw,1.8rem); font-weight: 700; margin-bottom: .2rem; }
+.header p { font-size: .82rem; color: var(--muted); }
+
+/* SELECTOR */
+.selector-wrap { width: 100%; max-width: 760px; margin-bottom: 1.2rem; animation: fadeUp .4s ease .1s both; }
+.selector-label { font-size: .75rem; color: var(--muted); margin-bottom: .5rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+.selector-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: .5rem; }
+.sel-btn {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  color: var(--muted); font-family: var(--mono); font-size: .85rem; font-weight: 600;
+  padding: .6rem .4rem; cursor: pointer; transition: all .2s; text-align: center;
+}
+.sel-btn:hover { border-color: var(--accent); color: var(--accent); }
+.sel-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+.sel-btn.done   { border-color: var(--green); color: var(--green); }
+.sel-btn.done.active { background: var(--green); color: #0f1117; }
+
+/* ENUNCIAT */
+.enunciat { width: 100%; max-width: 760px; background: var(--surface); border: 1px solid var(--border);
+  border-radius: 14px; padding: 1rem 1.5rem; margin-bottom: 1rem; display: flex; align-items: center;
+  gap: 1.5rem; flex-wrap: wrap; animation: fadeUp .4s ease .15s both; }
+.enun-part { }
+.enun-lbl { font-size: .68rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: .2rem; }
+.enun-expr { font-family: var(--mono); font-size: 1rem; font-weight: 600; }
+.enun-expr.div-color { color: var(--c-coef); }
+.enun-expr.div2-color { color: var(--accent2); }
+.enun-sep { font-size: 1.5rem; color: var(--border); }
+.enun-a { font-size: .82rem; color: var(--muted); margin-left: auto; }
+.enun-a strong { color: var(--amber); }
+
+/* PROGRESS */
+.progress-wrap { width: 100%; max-width: 760px; margin-bottom: 1rem; animation: fadeUp .4s ease .18s both; }
+.prog-steps { display: flex; gap: .35rem; margin-bottom: .3rem; }
+.prog-dot { height: 4px; flex: 1; border-radius: 2px; background: var(--border); transition: background .3s; }
+.prog-dot.done { background: var(--green); }
+.prog-dot.active { background: var(--accent); }
+.prog-lbl { font-size: .73rem; color: var(--muted); text-align: right; }
+
+/* MAIN CARD */
+.main-card { width: 100%; max-width: 760px; background: var(--surface);
+  border: 1px solid var(--border); border-radius: 20px; overflow: hidden; animation: fadeUp .4s ease .2s both; }
+.step-header { display: flex; align-items: center; gap: .9rem; padding: 1.1rem 1.6rem;
+  background: var(--surface2); border-bottom: 1px solid var(--border); }
+.step-num { width: 34px; height: 34px; border-radius: 50%; background: var(--accent);
+  color: #fff; font-weight: 700; font-size: .85rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.step-title { font-weight: 600; font-size: .95rem; }
+.step-desc  { font-size: .78rem; color: var(--muted); margin-top: .1rem; }
+
+/* TAULA RUFFINI */
+.ruf-wrap { padding: 1.2rem 1.5rem; border-bottom: 1px solid var(--border); overflow-x: auto; }
+.ruf-table { border-collapse: separate; border-spacing: 0; min-width: 300px; }
+.ruf-table td { font-family: var(--mono); font-size: .95rem; font-weight: 600; text-align: center;
+  padding: .5rem .7rem; border: 1px solid var(--border); min-width: 52px; transition: all .3s; }
+.ruf-table .cell-a { background: rgba(167,139,250,.15); color: var(--accent2); border-color: var(--accent2); border-radius: 6px 0 0 6px; }
+.ruf-table .cell-coef { color: var(--c-coef); background: rgba(147,197,253,.07); }
+.ruf-table .cell-inter { color: var(--c-inter); background: rgba(253,230,138,.07); }
+.ruf-table .cell-res { color: var(--c-res); background: rgba(110,231,183,.1); }
+.ruf-table .cell-rem { color: var(--c-rem); background: rgba(252,165,165,.12); border: 2px solid rgba(252,165,165,.4); }
+.ruf-table .cell-empty { color: var(--muted); opacity: .35; }
+.ruf-table .cell-fill { color: var(--muted); }
+.ruf-sep-row td { padding: 0 !important; height: 3px; background: var(--accent); border: none; }
+.ruf-sep-row td.sep-skip { background: var(--surface); border: none; }
+
+/* INPUT AREA */
+.input-area { padding: 1.3rem 1.5rem; }
+.iq { font-size: .88rem; color: var(--text); margin-bottom: .9rem; line-height: 1.5; }
+.iq strong { color: var(--accent); }
+.inp-row { display: flex; align-items: center; gap: .7rem; flex-wrap: wrap; margin-bottom: .9rem; }
+.inp-prefix { font-family: var(--mono); font-size: .95rem; color: var(--muted); }
+.terms-row { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; margin-bottom: .9rem; }
+.tiw { display: flex; align-items: center; gap: .3rem; }
+.tiw .lbl { font-size: .72rem; color: var(--muted); white-space: nowrap; }
+
+input[type=text], input.pi {
+  font-family: var(--mono); font-size: .95rem; font-weight: 600;
+  background: var(--bg); border: 2px solid var(--border); border-radius: 9px;
+  color: var(--text); padding: .42rem .75rem; outline: none; text-align: center;
+  transition: border-color .2s, box-shadow .2s; width: 90px;
+}
+input[type=text]:focus, input.pi:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(108,140,255,.15); }
+input.ok    { border-color: var(--green) !important; }
+input.error { border-color: var(--red) !important; animation: shake .3s ease; }
+
+/* BUTTONS */
+.btn-row { display: flex; gap: .7rem; flex-wrap: wrap; margin-top: .4rem; }
+.btn { font-family: var(--sans); font-size: .83rem; font-weight: 600; padding: .5rem 1.2rem;
+  border-radius: 9px; border: none; cursor: pointer; transition: all .2s; display: flex; align-items: center; gap: .35rem; }
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: #8aa4ff; transform: translateY(-1px); }
+.btn-hint { background: transparent; border: 1px solid var(--border); color: var(--muted); }
+.btn-hint:hover { border-color: var(--accent2); color: var(--accent2); }
+.btn-next { background: var(--green); color: #0f1117; }
+.btn-next:hover { background: #6ee7b7; transform: translateY(-1px); }
+
+/* FEEDBACK */
+.feedback { border-radius: 10px; padding: .8rem 1.1rem; margin-top: .9rem;
+  font-size: .84rem; line-height: 1.6; display: none; animation: fadeUp .3s ease; }
+.feedback.ok    { background: rgba(52,211,153,.1);  border: 1px solid rgba(52,211,153,.3);  color: #6ee7b7; }
+.feedback.error { background: rgba(248,113,113,.1); border: 1px solid rgba(248,113,113,.3); color: #fca5a5; }
+.feedback.hint  { background: rgba(167,139,250,.1); border: 1px solid rgba(167,139,250,.3); color: #c4b5fd; }
+
+/* CHAT */
+.chat-section { border-top: 1px solid var(--border); padding: 1rem 1.5rem; }
+.chat-toggle { display: flex; align-items: center; gap: .5rem; font-size: .78rem; color: var(--muted);
+  cursor: pointer; background: none; border: none; font-family: var(--sans); transition: color .2s; }
+.chat-toggle:hover { color: var(--accent2); }
+.chat-box { display: none; margin-top: .9rem; flex-direction: column; gap: .5rem; }
+.chat-box.open { display: flex; animation: fadeUp .3s ease; }
+.chat-input-row { display: flex; gap: .5rem; }
+.chat-input { flex:1; font-family:var(--sans); font-size:.83rem; background:var(--bg);
+  border:1px solid var(--border); border-radius:9px; color:var(--text); padding:.55rem .9rem; outline:none; transition:border-color .2s; }
+.chat-input:focus { border-color: var(--accent2); }
+.chat-send { background:var(--accent2); color:#fff; border:none; border-radius:9px; padding:.55rem .9rem; cursor:pointer; font-size:.9rem; }
+.chat-msgs { display:flex; flex-direction:column; gap:.4rem; max-height:180px; overflow-y:auto; }
+.chat-msg { border-radius:9px; padding:.55rem .85rem; font-size:.8rem; line-height:1.5; animation:fadeUp .2s ease; }
+.chat-msg.user  { background:var(--surface2); color:var(--muted); align-self:flex-end; max-width:85%; }
+.chat-msg.tutor { background:rgba(167,139,250,.1); border:1px solid rgba(167,139,250,.2); color:var(--text); }
+
+/* FINAL */
+.final-panel { display:none; width:100%; max-width:760px; margin-top:1.2rem; background:var(--surface);
+  border:1px solid var(--green); border-radius:18px; padding:1.8rem; text-align:center; }
+.final-panel.show { display:block; animation:fadeUp .5s ease; }
+.final-icon { font-size:2.5rem; margin-bottom:.8rem; }
+.final-title { font-size:1.3rem; font-weight:700; color:var(--green); margin-bottom:.4rem; }
+.final-text  { color:var(--muted); font-size:.85rem; margin-bottom:1.2rem; line-height:1.7; }
+.result-box  { background:var(--bg); border:1px solid var(--border); border-radius:10px;
+  padding:1rem 1.2rem; display:inline-block; text-align:left; font-family:var(--mono); }
+.result-line { font-size:.9rem; margin-bottom:.4rem; }
+.result-line:last-child { margin-bottom:0; }
+.btn-canviar { margin-top:1.2rem; display:inline-block; }
+
+@keyframes fadeDown { from{opacity:0;transform:translateY(-12px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeUp   { from{opacity:0;transform:translateY(10px)}  to{opacity:1;transform:translateY(0)} }
+@keyframes shake    { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+@keyframes pulse    { 0%,100%{opacity:1} 50%{opacity:.4} }
+.ldots span { animation:pulse 1.1s ease infinite; }
+.ldots span:nth-child(2){animation-delay:.2s} .ldots span:nth-child(3){animation-delay:.4s}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="badge">3r ESO · Matemàtiques</div>
+  <h1>Ruffini Interactiu</h1>
+  <p>Exercici 10 — Regla de Ruffini pas a pas</p>
+</div>
+
+<!-- SELECTOR -->
+<div class="selector-wrap">
+  <div class="selector-label">Escull un apartat</div>
+  <div class="selector-grid" id="selectorGrid"></div>
+</div>
+
+<!-- ENUNCIAT -->
+<div class="enunciat" id="enunciat"></div>
+
+<!-- PROGRESS -->
+<div class="progress-wrap">
+  <div class="prog-steps" id="progSteps"></div>
+  <div class="prog-lbl"   id="progLbl">Pas 1 de 4</div>
+</div>
+
+<!-- MAIN CARD -->
+<div class="main-card" id="mainCard">
+  <div class="step-header">
+    <div class="step-num" id="stepNum">1</div>
+    <div><div class="step-title" id="stepTitle"></div><div class="step-desc" id="stepDesc"></div></div>
+  </div>
+  <div class="ruf-wrap" id="rufWrap"></div>
+  <div class="input-area" id="inputArea"></div>
+  <div class="chat-section">
+    <button class="chat-toggle" onclick="toggleChat()">💬 No sé com seguir... pregunta al tutor</button>
+    <div class="chat-box" id="chatBox">
+      <div class="chat-msgs" id="chatMsgs"></div>
+      <div class="chat-input-row">
+        <input class="chat-input" id="chatInput" placeholder="Escriu la teva pregunta..." onkeydown="if(event.key==='Enter')sendChat()">
+        <button class="chat-send" onclick="sendChat()">→</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FINAL -->
+<div class="final-panel" id="finalPanel">
+  <div class="final-icon">🎉</div>
+  <div class="final-title" id="finalTitle"></div>
+  <div class="final-text">Has completat la divisió amb Ruffini! Comprova: Dividend = Divisor × Quocient + Resta</div>
+  <div class="result-box" id="resultBox"></div>
+  <br>
+  <button class="btn btn-next btn-canviar" onclick="resetExercici()">→ Fes un altre apartat</button>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// DADES DELS 6 EXERCICIS
+// ═══════════════════════════════════════════════════════════
+const EXERCICIS = [
+  {
+    label: "a",
+    dividend: "3x² − 4x + 5",
+    divisor:  "(x − 3)",
+    a: 3, aStr: "3",
+    coefs: [3, -4, 5],
+    intermedis: ["—", 9, 15],
+    resultat: [3, 5, 20],
+    quocient: "3x + 5",
+    resta: "20",
+    grauQ: 1,
+    // Passos: [identificar a, baixar primer coef, calcular intermedis fila per fila, llegir resultat]
+    tutorCtx: "Ruffini de (3x²−4x+5)÷(x−3), a=3. Resultat: Q=3x+5, R=20."
+  },
+  {
+    label: "b",
+    dividend: "2x³ − 3x² + 2x − 3",
+    divisor:  "(x + 2)",
+    a: -2, aStr: "−2",
+    coefs: [2, -3, 2, -3],
+    intermedis: ["—", -4, 14, -32],
+    resultat: [2, -7, 16, -35],
+    quocient: "2x² − 7x + 16",
+    resta: "−35",
+    grauQ: 2,
+    tutorCtx: "Ruffini de (2x³−3x²+2x−3)÷(x+2), a=−2. Atenció al signe! Resultat: Q=2x²−7x+16, R=−35."
+  },
+  {
+    label: "c",
+    dividend: "2x⁴ − 3x + 2",
+    divisor:  "(x − 2)",
+    a: 2, aStr: "2",
+    coefs: [2, 0, 0, -3, 2],
+    intermedis: ["—", 4, 8, 16, 26],
+    resultat: [2, 4, 8, 13, 28],
+    quocient: "2x³ + 4x² + 8x + 13",
+    resta: "28",
+    grauQ: 3,
+    nota: "⚠️ Falten els termes x³ i x² → posem coeficient 0",
+    tutorCtx: "Ruffini de (2x⁴−3x+2)÷(x−2), a=2. IMPORTANT: falten x³ i x², els coeficients complets són 2,0,0,−3,2. Q=2x³+4x²+8x+13, R=28."
+  },
+  {
+    label: "d",
+    dividend: "x⁵ − x³ + x² − 2x",
+    divisor:  "(x + 3)",
+    a: -3, aStr: "−3",
+    coefs: [1, 0, -1, 1, -2, 0],
+    intermedis: ["—", -3, 9, -24, 69, -201],
+    resultat: [1, -3, 8, -23, 67, -201],
+    quocient: "x⁴ − 3x³ + 8x² − 23x + 67",
+    resta: "−201",
+    grauQ: 4,
+    nota: "⚠️ Falten els termes x⁴ i terme independent → posem coeficients 0",
+    tutorCtx: "Ruffini de (x⁵−x³+x²−2x)÷(x+3), a=−3. Coefs complets: 1,0,−1,1,−2,0. Q=x⁴−3x³+8x²−23x+67, R=−201."
+  },
+  {
+    label: "e",
+    dividend: "x⁵ + 3x⁴ − 5x³ + x² − 1",
+    divisor:  "(x + 1)",
+    a: -1, aStr: "−1",
+    coefs: [1, 3, -5, 1, 0, -1],
+    intermedis: ["—", -1, -2, 7, -8, 8],
+    resultat: [1, 2, -7, 8, -8, 7],
+    quocient: "x⁴ + 2x³ − 7x² + 8x − 8",
+    resta: "7",
+    grauQ: 4,
+    nota: "⚠️ Falta el terme x → coeficient 0 en aquella posició",
+    tutorCtx: "Ruffini de (x⁵+3x⁴−5x³+x²−1)÷(x+1), a=−1. Coefs: 1,3,−5,1,0,−1. Q=x⁴+2x³−7x²+8x−8, R=7."
+  },
+  {
+    label: "f",
+    dividend: "x⁶ − x⁴ + 2x²",
+    divisor:  "(x − 1)",
+    a: 1, aStr: "1",
+    coefs: [1, 0, -1, 0, 2, 0, 0],
+    intermedis: ["—", 1, 1, 0, 0, 2, 2],
+    resultat: [1, 1, 0, 0, 2, 2, 2],
+    quocient: "x⁵ + x⁴ + 2x + 2",
+    resta: "2",
+    grauQ: 5,
+    nota: "⚠️ Falten x⁵, x³, x i terme independent → tots els coeficients que falten = 0",
+    tutorCtx: "Ruffini de (x⁶−x⁴+2x²)÷(x−1), a=1. Coefs complets: 1,0,−1,0,2,0,0. Q=x⁵+x⁴+2x+2, R=2."
+  }
+];
+
+// ═══════════════════════════════════════════════════════════
+// ESTAT GLOBAL
+// ═══════════════════════════════════════════════════════════
+let ex = null;           // exercici actiu
+let currentStep = 1;
+let totalSteps = 0;
+let done = {};           // {label: true} per als completats
+let chatOpen = false;
+let hintCounts = {};
+
+// ═══════════════════════════════════════════════════════════
+// INIT SELECTOR
+// ═══════════════════════════════════════════════════════════
+function initSelector() {
+  const grid = document.getElementById('selectorGrid');
+  grid.innerHTML = '';
+  EXERCICIS.forEach(e => {
+    const btn = document.createElement('button');
+    btn.className = 'sel-btn' + (done[e.label] ? ' done' : '');
+    btn.id = 'selbtn-' + e.label;
+    btn.textContent = e.label + ')';
+    btn.onclick = () => selectExercici(e.label);
+    grid.appendChild(btn);
+  });
+}
+
+function selectExercici(label) {
+  ex = EXERCICIS.find(e => e.label === label);
+  document.querySelectorAll('.sel-btn').forEach(b => b.classList.remove('active'));
+  const btn = document.getElementById('selbtn-' + label);
+  btn.classList.add('active');
+  currentStep = 1;
+  hintCounts = {};
+  chatOpen = false;
+  document.getElementById('chatBox').classList.remove('open');
+  document.getElementById('chatMsgs').innerHTML = '';
+  document.getElementById('finalPanel').classList.remove('show');
+  document.getElementById('mainCard').style.display = '';
+
+  renderEnunciat();
+  calcTotalSteps();
+  updateProgress();
+  renderStep();
+}
+
+function resetExercici() {
+  document.getElementById('finalPanel').classList.remove('show');
+  document.getElementById('mainCard').style.display = '';
+  currentStep = 1;
+  hintCounts = {};
+  renderStep();
+}
+
+// ═══════════════════════════════════════════════════════════
+// ENUNCIAT
+// ═══════════════════════════════════════════════════════════
+function renderEnunciat() {
+  const el = document.getElementById('enunciat');
+  el.innerHTML = `
+    <div class="enun-part">
+      <div class="enun-lbl">Dividend</div>
+      <div class="enun-expr div-color">${ex.dividend}</div>
+    </div>
+    <div class="enun-sep">÷</div>
+    <div class="enun-part">
+      <div class="enun-lbl">Divisor</div>
+      <div class="enun-expr div2-color">${ex.divisor}</div>
+    </div>
+    <div class="enun-a">Valor de <strong>a = ${ex.aStr}</strong></div>
+  `;
+  if (ex.nota) {
+    el.innerHTML += `<div style="width:100%;font-size:.78rem;color:var(--amber);margin-top:.4rem">${ex.nota}</div>`;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// PASSOS: estructura dinàmica segons cada exercici
+// Pas 1: identificar a  →  Pas 2: baixar primer coef
+// Pas 3..N-1: per a cada columna d'intermedis (menys la primera "—")
+// Pas N: llegir resultat (quocient + resta)
+// ═══════════════════════════════════════════════════════════
+function calcTotalSteps() {
+  // 1 (id. a) + 1 (baixar primer) + (n coefs - 1) columnes d'intermedis + 1 (llegir)
+  totalSteps = 1 + 1 + (ex.coefs.length - 1) + 1;
+}
+
+function updateProgress() {
+  const wrap = document.getElementById('progSteps');
+  wrap.innerHTML = '';
+  for (let i = 1; i <= totalSteps; i++) {
+    const d = document.createElement('div');
+    d.className = 'prog-dot' + (i < currentStep ? ' done' : i === currentStep ? ' active' : '');
+    wrap.appendChild(d);
+  }
+  document.getElementById('progLbl').textContent = `Pas ${currentStep} de ${totalSteps}`;
+}
+
+// ═══════════════════════════════════════════════════════════
+// TAULA RUFFINI VISUAL
+// ═══════════════════════════════════════════════════════════
+function renderRuffiniTable(revealUpToCol) {
+  // revealUpToCol: quantes columnes de la fila 3 es mostren (0 = res, -1 = tot)
+  const n = ex.coefs.length;
+  const wrap = document.getElementById('rufWrap');
+
+  let html = '<table class="ruf-table"><tbody>';
+
+  // Fila 1: a + coeficients dividend
+  html += '<tr>';
+  html += `<td class="cell-a">${ex.aStr}</td>`;
+  for (let i = 0; i < n; i++) {
+    const c = ex.coefs[i];
+    html += `<td class="cell-coef">${fmt(c)}</td>`;
+  }
+  html += '</tr>';
+
+  // Fila 2: intermedis (mostrem fins a revealUpToCol)
+  html += '<tr>';
+  html += '<td class="cell-fill" style="border:none;background:transparent"></td>';
+  for (let i = 0; i < n; i++) {
+    if (i === 0) {
+      html += `<td class="cell-inter" style="color:var(--muted);opacity:.4">—</td>`;
+    } else {
+      const colIdx = i; // columna real
+      if (revealUpToCol >= colIdx) {
+        const v = ex.intermedis[i];
+        html += `<td class="cell-inter">${fmt(v)}</td>`;
+      } else {
+        html += `<td class="cell-empty">?</td>`;
+      }
+    }
+  }
+  html += '</tr>';
+
+  // Separador
+  html += '<tr class="ruf-sep-row"><td class="sep-skip"></td>' + '<td></td>'.repeat(n) + '</tr>';
+
+  // Fila 3: resultat
+  html += '<tr>';
+  html += '<td style="border:none;background:transparent"></td>';
+  for (let i = 0; i < n; i++) {
+    const isLast = i === n - 1;
+    if (revealUpToCol > i || revealUpToCol === -1) {
+      if (isLast) {
+        html += `<td class="cell-rem">${fmt(ex.resultat[i])}</td>`;
+      } else {
+        html += `<td class="cell-res">${fmt(ex.resultat[i])}</td>`;
+      }
+    } else {
+      html += `<td class="cell-empty">?</td>`;
+    }
+  }
+  html += '</tr>';
+
+  html += '</tbody></table>';
+  wrap.innerHTML = html;
+}
+
+function fmt(v) {
+  if (v === "—") return "—";
+  if (v >= 0) return String(v);
+  return String(v); // el negatiu ja porta el signe
+}
+
+// ═══════════════════════════════════════════════════════════
+// RENDER DE CADA PAS
+// ═══════════════════════════════════════════════════════════
+function renderStep() {
+  document.getElementById('stepNum').textContent = currentStep;
+  document.getElementById('chatBox').classList.remove('open');
+  chatOpen = false;
+
+  const n = ex.coefs.length;
+
+  if (currentStep === 1) {
+    // PAS 1: identificar el valor de a
+    renderRuffiniTable(0);
+    setStepHeader("Identifica el valor de a", `Si el divisor és ${ex.divisor}, quin és el valor de a?`);
+    document.getElementById('inputArea').innerHTML = `
+      <div class="iq">El divisor és <strong>${ex.divisor}</strong>. Ruffini divideix entre (x − a), per tant a és el valor que fa zero el divisor.<br>
+      <strong>Quant val a?</strong></div>
+      <div class="inp-row">
+        <span class="inp-prefix">a =</span>
+        <input type="text" id="inp1" placeholder="?" style="width:100px">
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="check1()">✓ Comprovar</button>
+        <button class="btn btn-hint" onclick="showHint(1)">💡 Pista</button>
+      </div>
+      <div class="feedback" id="fb1"></div>
+    `;
+    document.getElementById('inp1').focus();
+
+  } else if (currentStep === 2) {
+    // PAS 2: baixar el primer coeficient
+    renderRuffiniTable(0);
+    setStepHeader("Baixa el primer coeficient", "El primer coeficient del dividend baixa directament a la fila de resultats");
+    const c0 = ex.coefs[0];
+    document.getElementById('inputArea').innerHTML = `
+      <div class="iq">El primer coeficient del dividend és <strong>${fmt(c0)}</strong>. Baixa'l directament a la fila inferior (fila de resultats).<br>
+      <strong>Quin valor posem a la primera cel·la del resultat?</strong></div>
+      <div class="inp-row">
+        <span class="inp-prefix">1a cel·la resultat =</span>
+        <input type="text" id="inp2" placeholder="?" style="width:90px">
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="check2()">✓ Comprovar</button>
+        <button class="btn btn-hint" onclick="showHint(2)">💡 Pista</button>
+      </div>
+      <div class="feedback" id="fb2"></div>
+    `;
+    document.getElementById('inp2').focus();
+
+  } else if (currentStep >= 3 && currentStep <= n + 1) {
+    // PASSOS 3..n+1: columna colIdx = currentStep - 2
+    const colIdx = currentStep - 2; // quin coef del dividend estem processant (1-based)
+    const prevRes = ex.resultat[colIdx - 1]; // resultat anterior
+    const a = ex.a;
+    const inter = ex.intermedis[colIdx]; // intermedi d'aquesta columna
+    const coef = ex.coefs[colIdx];
+    const res = ex.resultat[colIdx];
+
+    renderRuffiniTable(colIdx - 1); // mostrem fins a la columna anterior
+
+    setStepHeader(
+      `Columna ${colIdx + 1} de ${n}`,
+      `Multiplica ${fmt(prevRes)} × ${ex.aStr} i suma amb el coeficient ${fmt(coef)}`
+    );
+
+    document.getElementById('inputArea').innerHTML = `
+      <div class="iq">
+        <strong>Pas A</strong> — Multiplica el resultat anterior (<strong>${fmt(prevRes)}</strong>) per a (<strong>${ex.aStr}</strong>):<br>
+        ${fmt(prevRes)} × ${ex.aStr} = <strong>?</strong> → escriu-ho a la fila del mig (fila groga)<br><br>
+        <strong>Pas B</strong> — Suma aquest valor amb el coeficient <strong>${fmt(coef)}</strong> per obtenir el resultat:
+      </div>
+      <div class="terms-row">
+        <div class="tiw">
+          <span class="lbl">Intermedi (fila groga):</span>
+          <input type="text" id="inpA${colIdx}" placeholder="?" style="width:90px">
+        </div>
+        <span style="color:var(--muted);font-family:var(--mono)">  +  ${fmt(coef)}  =  </span>
+        <div class="tiw">
+          <span class="lbl">Resultat:</span>
+          <input type="text" id="inpB${colIdx}" placeholder="?" style="width:90px">
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkCol(${colIdx})">✓ Comprovar</button>
+        <button class="btn btn-hint" onclick="showHint(${currentStep})">💡 Pista</button>
+      </div>
+      <div class="feedback" id="fbcol${colIdx}"></div>
+    `;
+
+  } else {
+    // DARRER PAS: llegir el resultat
+    renderRuffiniTable(-1);
+    setStepHeader("Llegeix el resultat", "La última cel·la és la resta. Les altres són els coeficients del quocient.");
+    const n2 = ex.coefs.length;
+
+    // Construïm la llegenda del quocient
+    let llegenda = '';
+    for (let i = 0; i < n2 - 1; i++) {
+      const g = (n2 - 2) - i;
+      if (g === 0) llegenda += `terme independent`;
+      else if (g === 1) llegenda += `coef. de x`;
+      else llegenda += `coef. de x^${g}`;
+      if (i < n2 - 2) llegenda += ', ';
+    }
+
+    document.getElementById('inputArea').innerHTML = `
+      <div class="iq">
+        La taula ja és completa! Les cel·les verdes (fila inferior) contenen els coeficients del quocient
+        i l'última cel·la vermella és la resta.<br><br>
+        Escriu el <strong>quocient Q(x)</strong> i la <strong>resta R</strong>:
+      </div>
+      <div class="inp-row" style="flex-direction:column;align-items:flex-start;gap:.6rem">
+        <div style="display:flex;align-items:center;gap:.7rem">
+          <span class="inp-prefix">Q(x) =</span>
+          <input type="text" id="inpQ" placeholder="ex: 3x + 5" style="width:260px;text-align:left">
+        </div>
+        <div style="display:flex;align-items:center;gap:.7rem">
+          <span class="inp-prefix">R =</span>
+          <input type="text" id="inpR" placeholder="nombre" style="width:120px">
+        </div>
+      </div>
+      <div style="font-size:.75rem;color:var(--muted);margin:.4rem 0 .8rem">Consell: pots escriure ^ per als exponents, ex: x^2</div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkFinal()">✓ Comprovar</button>
+        <button class="btn btn-hint" onclick="showHint(${currentStep})">💡 Pista</button>
+      </div>
+      <div class="feedback" id="fbfinal"></div>
+    `;
+  }
+
+  updateProgress();
+}
+
+function setStepHeader(title, desc) {
+  document.getElementById('stepTitle').textContent = title;
+  document.getElementById('stepDesc').textContent  = desc;
+}
+
+// ═══════════════════════════════════════════════════════════
+// CHECKS PER A CADA PAS
+// ═══════════════════════════════════════════════════════════
+function norm(s) {
+  return s.trim().replace(/\s+/g,'').replace(/−/g,'-').replace(/\+/g,'').toLowerCase();
+}
+function normN(s) {
+  return parseFloat(s.trim().replace(/−/g,'-').replace(/\s/g,'').replace(',','.'));
+}
+
+function check1() {
+  const v = normN(document.getElementById('inp1').value);
+  if (v === ex.a) {
+    setOk('inp1');
+    showFb('fb1','ok',`✓ Correcte! Si el divisor és ${ex.divisor}, aleshores a = ${ex.aStr}. ${ex.a < 0 ? 'Atenció: (x + b) → a = −b!' : ''}`);
+    showNext('fb1', 2);
+  } else {
+    setErr('inp1');
+    showFb('fb1','error',`✗ No és correcte. Pensa: el divisor és ${ex.divisor}. Per a Ruffini, el valor a és el que anuŀla x en el divisor.`);
+  }
+}
+
+function check2() {
+  const v = normN(document.getElementById('inp2').value);
+  if (v === ex.coefs[0]) {
+    setOk('inp2');
+    renderRuffiniTable(0);
+    showFb('fb2','ok',`✓ Correcte! El primer coeficient (${ex.coefs[0]}) baixa directament, sense cap operació.`);
+    showNext('fb2', 3);
+  } else {
+    setErr('inp2');
+    showFb('fb2','error',`✗ El primer coeficient del dividend és ${ex.coefs[0]}. Baixa'l tal qual.`);
+  }
+}
+
+function checkCol(colIdx) {
+  const prevRes = ex.resultat[colIdx - 1];
+  const expectedInter = ex.intermedis[colIdx];
+  const expectedRes   = ex.resultat[colIdx];
+
+  const vA = normN(document.getElementById(`inpA${colIdx}`).value);
+  const vB = normN(document.getElementById(`inpB${colIdx}`).value);
+  const okA = vA === expectedInter;
+  const okB = vB === expectedRes;
+
+  if (!okA) setErr(`inpA${colIdx}`); else setOk(`inpA${colIdx}`);
+  if (!okB) setErr(`inpB${colIdx}`); else setOk(`inpB${colIdx}`);
+
+  if (okA && okB) {
+    renderRuffiniTable(colIdx);
+    showFb(`fbcol${colIdx}`,'ok',
+      `✓ Perfecte! ${fmt(prevRes)} × ${ex.aStr} = ${fmt(expectedInter)}, i ${fmt(expectedInter)} + (${fmt(ex.coefs[colIdx])}) = ${fmt(expectedRes)}.`);
+    showNext(`fbcol${colIdx}`, currentStep + 1);
+  } else {
+    let msg = '✗ ';
+    if (!okA) msg += `Intermedi: ${fmt(prevRes)} × ${ex.aStr} ≠ ${fmt(vA)}. `;
+    if (!okB) msg += `Resultat: ${fmt(expectedInter)} + ${fmt(ex.coefs[colIdx])} ≠ ${fmt(vB)}.`;
+    showFb(`fbcol${colIdx}`,'error', msg);
+  }
+}
+
+function checkFinal() {
+  // Acceptem qualsevol escriptura raonable del quocient
+  const qInput = document.getElementById('inpQ').value.trim();
+  const rInput = document.getElementById('inpR').value.trim();
+  const rVal = normN(rInput);
+
+  // Per al quocient: comprovem que tots els coeficients hi siguin (comprovació lleugera)
+  const qCoefs = ex.resultat.slice(0, -1);
+  let qOk = true;
+  for (const c of qCoefs) {
+    if (c !== 0 && !qInput.replace(/\s/g,'').includes(String(Math.abs(c)))) { qOk = false; }
+  }
+  const rOk = rVal === ex.resultat[ex.resultat.length - 1];
+
+  if (qOk && rOk) {
+    showFb('fbfinal','ok',`✓ Perfecte! Q(x) = ${ex.quocient} i R = ${ex.resta}. Divisió completada! 🎉`);
+    setTimeout(() => showFinal(), 900);
+  } else {
+    let msg = '✗ ';
+    if (!qOk) msg += `El quocient no sembla correcte. Els coeficients han de ser: ${qCoefs.join(', ')}. `;
+    if (!rOk) msg += `La resta és ${ex.resta}, no ${rInput}.`;
+    showFb('fbfinal','error', msg);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// PISTES
+// ═══════════════════════════════════════════════════════════
+const HINTS = {
+  1: [
+    "El divisor és de la forma (x − a). Quin valor de x faria que el divisor valgués 0?",
+    `Si el divisor és ${'{ex.divisor}' }, substituta x pel valor que busques i comprova que dona 0.`,
+    `Si el divisor és (x + b), aleshores a = −b. Si és (x − b), aleshores a = +b.`
+  ],
+  2: [
+    "El primer coeficient del dividend baixa directament, sense multiplicar per res.",
+    "Mira la primera cel·la de la fila dels coeficients (fila blava). Aquell és el valor que baixa."
+  ],
+};
+
+function getHintForCol(colIdx) {
+  const prevRes = ex.resultat[colIdx - 1];
+  return [
+    `Primer multiplica el resultat anterior (${fmt(prevRes)}) per a (${ex.aStr}). Quin és el producte?`,
+    `${fmt(prevRes)} × ${ex.aStr} = ${fmt(ex.intermedis[colIdx])}. Ara suma aquest valor amb el coeficient ${fmt(ex.coefs[colIdx])}.`,
+    `Intermedi = ${fmt(ex.intermedis[colIdx])}, coeficient = ${fmt(ex.coefs[colIdx])}. Suma: ${fmt(ex.intermedis[colIdx])} + (${fmt(ex.coefs[colIdx])}) = ${fmt(ex.resultat[colIdx])}.`
+  ];
+}
+
+function getHintFinal() {
+  const n = ex.coefs.length;
+  return [
+    "Les cel·les verdes (fila inferior) contenen els coeficients del quocient, d'esquerra a dreta en ordre decreixent de grau.",
+    `El quocient té grau ${ex.grauQ}. Els seus coeficients (esquerra a dreta) són: ${ex.resultat.slice(0,-1).join(', ')}. L'última cel·la (vermella) és la resta.`,
+    `Q(x) = ${ex.quocient} i R = ${ex.resta}.`
+  ];
+}
+
+function showHint(step) {
+  let hints;
+  if (step === 1) hints = HINTS[1].map(h => h.replace('{ex.divisor}', ex.divisor));
+  else if (step === 2) hints = HINTS[2];
+  else if (step === totalSteps) hints = getHintFinal();
+  else {
+    const colIdx = step - 2;
+    hints = getHintForCol(colIdx);
+  }
+
+  const key = `step${step}`;
+  hintCounts[key] = (hintCounts[key] || 0);
+  const idx = hintCounts[key] % hints.length;
+  hintCounts[key]++;
+
+  // Trobar el feedback id correcte
+  let fbId;
+  if (step === 1) fbId = 'fb1';
+  else if (step === 2) fbId = 'fb2';
+  else if (step === totalSteps) fbId = 'fbfinal';
+  else fbId = `fbcol${step-2}`;
+
+  showFb(fbId, 'hint', `💡 ${hints[idx]}` + (hints.length > 1 ? `<br><small style="opacity:.65">Pista ${idx+1}/${hints.length} — torna a prémer per a la següent</small>` : ''));
+}
+
+// ═══════════════════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════════════════
+function setOk(id) { const e = document.getElementById(id); if(e){e.classList.remove('error');e.classList.add('ok');} }
+function setErr(id) {
+  const e = document.getElementById(id);
+  if(e){ e.classList.remove('ok'); e.classList.add('error');
+    e.style.animation='none'; requestAnimationFrame(()=>{e.style.animation='';}); }
+}
+function showFb(id, type, html) {
+  const e = document.getElementById(id);
+  if(!e) return;
+  e.className = `feedback ${type}`; e.innerHTML = html; e.style.display='block';
+}
+function showNext(fbId, nextStep) {
+  const e = document.getElementById(fbId); if(!e) return;
+  const btn = document.createElement('button');
+  btn.className = 'btn btn-next';
+  btn.style.marginTop = '.7rem';
+  btn.innerHTML = nextStep <= totalSteps ? `→ Pas ${nextStep}` : '🎉 Llegir resultat';
+  btn.onclick = () => goToStep(nextStep);
+  e.appendChild(document.createElement('br'));
+  e.appendChild(btn);
+}
+function goToStep(n) {
+  currentStep = n;
+  updateProgress();
+  renderStep();
+  document.getElementById('mainCard').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function showFinal() {
+  done[ex.label] = true;
+  initSelector();
+  document.getElementById('mainCard').style.display = 'none';
+  const fp = document.getElementById('finalPanel');
+  fp.classList.add('show');
+  document.getElementById('finalTitle').textContent = `Apartat ${ex.label}) completat! 🎉`;
+  document.getElementById('resultBox').innerHTML = `
+    <div class="result-line">Dividend: <span style="color:var(--c-coef)">${ex.dividend}</span></div>
+    <div class="result-line">Divisor: <span style="color:var(--accent2)">${ex.divisor}</span></div>
+    <div class="result-line" style="margin-top:.6rem">Quocient: <span style="color:var(--c-res)">${ex.quocient}</span></div>
+    <div class="result-line">Resta: <span style="color:var(--c-rem)">${ex.resta}</span></div>
+  `;
+  fp.scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+// ═══════════════════════════════════════════════════════════
+// TUTOR CHAT
+// ═══════════════════════════════════════════════════════════
+function toggleChat() {
+  chatOpen = !chatOpen;
+  const cb = document.getElementById('chatBox');
+  cb.classList.toggle('open', chatOpen);
+  if (chatOpen && document.getElementById('chatMsgs').children.length === 0) {
+    addTutorMsg('Hola! Estic aquí per ajudar-te. Quin dubte tens sobre aquest pas de Ruffini?');
+  }
+  if (chatOpen) document.getElementById('chatInput').focus();
+}
+function addUserMsg(t) {
+  const d = document.createElement('div'); d.className='chat-msg user'; d.textContent=t;
+  document.getElementById('chatMsgs').appendChild(d); scrollChat();
+}
+function addTutorMsg(t) {
+  const d = document.createElement('div'); d.className='chat-msg tutor'; d.innerHTML=t;
+  document.getElementById('chatMsgs').appendChild(d); scrollChat();
+}
+function scrollChat() { const m=document.getElementById('chatMsgs'); m.scrollTop=m.scrollHeight; }
+function showTyping() {
+  const d=document.createElement('div'); d.className='chat-msg tutor'; d.id='typ';
+  d.innerHTML='<span class="ldots"><span>·</span><span>·</span><span>·</span></span>';
+  document.getElementById('chatMsgs').appendChild(d); scrollChat(); return d;
+}
+async function sendChat() {
+  const inp = document.getElementById('chatInput');
+  const txt = inp.value.trim(); if(!txt) return;
+  inp.value=''; addUserMsg(txt);
+  const typ = showTyping();
+  const sys = `Ets un tutor de matemàtiques de 3r ESO, simpàtic i pacient. Estàs ajudant amb la regla de Ruffini. ${ex.tutorCtx} Estem al pas ${currentStep} de ${totalSteps}. Respon en català, màxim 3 frases, guia sense donar la resposta directa.`;
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:1000,
+        system: sys, messages:[{role:'user',content:txt}] })
+    });
+    const data = await res.json();
+    typ.remove();
+    addTutorMsg(data.content?.[0]?.text || 'Disculpa, torna a intentar-ho!');
+  } catch {
+    typ.remove();
+    // Fallback local
+    const fallbacks = [
+      `Recorda: al pas actual has de ${currentStep <= 2 ? 'identificar el valor de a o baixar el primer coeficient' : 'multiplicar el resultat anterior per a i sumar amb el coeficient del dividend'}.`,
+      `Pensa pas a pas. Quin és el valor amb el qual has de multiplicar? (a = ${ex.aStr})`,
+      `Si t'encalles, prem el botó "Pista" per obtenir una ajuda progressiva!`
+    ];
+    addTutorMsg(fallbacks[Math.floor(Math.random()*fallbacks.length)]);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════
+initSelector();
+// Seleccionem l'apartat a) per defecte
+selectExercici('a');
+</script>
+</body>
+</html>
