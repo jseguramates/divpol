@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pràctica de Polinomis</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Georgia, serif; background: #f5f3ee; color: #2c2c2a; min-height: 100vh; }
+
+.header { background: #3c3489; color: #fff; padding: 1.5rem 2rem; }
+.header h1 { font-size: 1.6rem; font-weight: 500; }
+.header p { font-size: 0.95rem; opacity: 0.8; margin-top: 0.3rem; }
+
+.container { max-width: 880px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+.menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-top: 1rem; }
+.menu-card { background: #fff; border: 1px solid #d3d1c7; border-radius: 12px; padding: 1.5rem; cursor: pointer; transition: border-color 0.2s, transform 0.15s; }
+.menu-card:hover { border-color: #7f77dd; transform: translateY(-2px); }
+.menu-card .icon { font-size: 2rem; margin-bottom: 0.75rem; }
+.menu-card h2 { font-size: 1.05rem; font-weight: 500; color: #3c3489; margin-bottom: 0.4rem; }
+.menu-card p { font-size: 0.88rem; color: #5f5e5a; line-height: 1.5; }
+
+.ex-screen { display: none; }
+.ex-screen.active { display: block; }
+
+.back-btn { background: none; border: 1px solid #d3d1c7; border-radius: 8px; padding: 0.4rem 1rem; cursor: pointer; font-size: 0.9rem; color: #5f5e5a; margin-bottom: 1.5rem; }
+.back-btn:hover { border-color: #888780; }
+
+.progress-bar { background: #e1e0d8; border-radius: 99px; height: 6px; margin-bottom: 1.5rem; }
+.progress-fill { background: #3c3489; border-radius: 99px; height: 6px; transition: width 0.4s; }
+.progress-label { font-size: 0.82rem; color: #888780; margin-bottom: 0.5rem; }
+
+.ex-card { background: #fff; border: 1px solid #d3d1c7; border-radius: 12px; padding: 1.75rem; margin-bottom: 1rem; }
+.ex-card .tag { display: inline-block; background: #eeedfe; color: #3c3489; font-size: 0.75rem; padding: 3px 10px; border-radius: 99px; margin-bottom: 0.75rem; }
+.ex-card .pregunta { font-size: 1.1rem; color: #2c2c2a; line-height: 1.6; }
+
+.math-display { background: #f5f3ee; border-left: 3px solid #7f77dd; padding: 0.75rem 1rem; border-radius: 0 8px 8px 0; margin: 1rem 0; font-size: 1.15rem; font-family: 'Courier New', monospace; }
+
+.formula-box { margin: 0.75rem 0; border: 1px solid #d3d1c7; border-radius: 8px; overflow: hidden; }
+.formula-toggle { width: 100%; background: #f5f3ee; border: none; text-align: left; padding: 0.55rem 0.9rem; cursor: pointer; font-size: 0.85rem; color: #5f5e5a; display: flex; justify-content: space-between; align-items: center; }
+.formula-toggle:hover { background: #eeedfe; color: #3c3489; }
+.formula-body { display: none; padding: 0.75rem 1rem; font-size: 0.92rem; font-family: 'Courier New', monospace; line-height: 2.2; background: #fff; }
+.formula-body.open { display: block; }
+
+.resp-input { padding: 0.6rem 0.9rem; border: 1px solid #d3d1c7; border-radius: 8px; font-size: 1rem; font-family: 'Courier New', monospace; outline: none; width: 100%; }
+.resp-input:focus { border-color: #7f77dd; box-shadow: 0 0 0 3px #eeedfe; }
+.resp-input.correct { border-color: #1d9e75; background: #e1f5ee; }
+.resp-input.wrong { border-color: #e24b4a; background: #fcebeb; }
+.resp-input:disabled { background: #f5f3ee; color: #888780; }
+
+.mathkbd { display: flex; flex-wrap: wrap; gap: 5px; margin: 0.6rem 0; }
+.mathkbd button { padding: 5px 10px; font-size: 0.88rem; font-family: 'Courier New', monospace; border: 1px solid #d3d1c7; border-radius: 6px; background: #fff; cursor: pointer; color: #3c3489; }
+.mathkbd button:hover { background: #eeedfe; border-color: #7f77dd; }
+
+.ruf-table { border-collapse: collapse; margin: 0.75rem 0; font-family: 'Courier New', monospace; }
+.ruf-table td { padding: 7px 13px; text-align: center; border: 1px solid #d3d1c7; min-width: 56px; font-size: 1rem; }
+.ruf-table .cap { background: #eeedfe; color: #3c3489; font-weight: 500; font-size: 0.78rem; border: none; padding: 4px 13px; }
+.ruf-table .arrel-cel { background: #faeeda; color: #412402; font-weight: 500; }
+.ruf-table .prod-cel { background: #f5f3ee; color: #5f5e5a; font-size: 0.85rem; border-style: dashed; }
+.ruf-table .linia td { border-top: 2px solid #3c3489; }
+.ruf-table .fet-cel { background: #e1f5ee; color: #085041; font-weight: 500; }
+.ruf-table .pend-cel { color: #d3d1c7; }
+.ruf-table input.ruf-in { width: 54px; border: 1px solid #7f77dd; border-radius: 5px; text-align: center; font-family: 'Courier New', monospace; font-size: 0.95rem; padding: 4px 2px; outline: none; background: #eeedfe; }
+.ruf-table input.ruf-in:focus { box-shadow: 0 0 0 2px #afa9ec; }
+.ruf-table input.ruf-in.err { border-color: #e24b4a; background: #fcebeb; }
+
+.div-pas { border: 1px solid #e1e0d8; border-radius: 8px; padding: 0.75rem 1rem; margin: 0.5rem 0; }
+.div-pas.actiu { border-color: #7f77dd; background: #faf9ff; }
+.div-pas.fet { border-color: #5dcaa5; background: #f0fbf6; }
+.div-pas.pendent { opacity: 0.45; }
+.div-pas .pas-label { font-size: 0.75rem; color: #888780; font-family: Georgia, serif; margin-bottom: 5px; }
+.div-pas.actiu .pas-label { color: #3c3489; font-weight: 500; }
+.div-pas .pas-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-family: 'Courier New', monospace; font-size: 0.95rem; }
+.div-pas input.pas-in { width: 140px; border: 1px solid #d3d1c7; border-radius: 5px; padding: 4px 8px; font-family: 'Courier New', monospace; font-size: 0.95rem; outline: none; }
+.div-pas input.pas-in:focus { border-color: #7f77dd; }
+.div-pas input.pas-in.ok { border-color: #1d9e75; background: #e1f5ee; }
+.div-pas input.pas-in.err { border-color: #e24b4a; background: #fcebeb; }
+
+.btn { padding: 0.55rem 1.2rem; border-radius: 8px; font-size: 0.95rem; cursor: pointer; border: 1px solid; transition: all 0.15s; }
+.btn-primary { background: #3c3489; color: #fff; border-color: #3c3489; }
+.btn-primary:hover { background: #26215c; }
+.btn-secondary { background: #fff; color: #3c3489; border-color: #7f77dd; }
+.btn-secondary:hover { background: #eeedfe; }
+.action-row { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 0.75rem; }
+
+.feedback { border-radius: 8px; padding: 0.75rem 1rem; margin-top: 0.75rem; font-size: 0.95rem; line-height: 1.6; display: none; }
+.feedback.show { display: block; }
+.feedback.ok { background: #e1f5ee; color: #085041; border: 1px solid #5dcaa5; }
+.feedback.error { background: #fcebeb; color: #501313; border: 1px solid #f09595; }
+.feedback.pista { background: #faeeda; color: #412402; border: 1px solid #fac775; }
+.feedback.solucio { background: #eeedfe; color: #26215c; border: 1px solid #afa9ec; }
+
+.nav-row { display: flex; justify-content: flex-end; margin-top: 1.5rem; }
+
+.result-card { background: #fff; border: 1px solid #d3d1c7; border-radius: 12px; padding: 2rem; text-align: center; }
+.result-card .score { font-size: 3rem; color: #3c3489; font-weight: 500; }
+.result-card .score-label { color: #5f5e5a; margin-bottom: 1.5rem; }
+.stars { font-size: 2rem; margin-bottom: 1rem; }
+label.small { font-size: 0.82rem; color: #888780; display: block; margin-bottom: 4px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Pràctica de Polinomis</h1>
+  <p>Identitats notables · Divisió · Ruffini</p>
+</div>
+
+<div class="container">
+
+  <div id="menu">
+    <p style="color:#5f5e5a;margin-bottom:1.5rem;">Escull un bloc per practicar:</p>
+    <div class="menu-grid">
+      <div class="menu-card" onclick="iniciarBloc(0)">
+        <div class="icon">📐</div>
+        <h2>Identitats notables</h2>
+        <p>Quadrat de la suma, quadrat de la diferència i suma per diferència. En les dos direccions.</p>
+      </div>
+      <div class="menu-card" onclick="iniciarBloc(1)">
+        <div class="icon">➗</div>
+        <h2>Divisió de polinomis</h2>
+        <p>Divisió clàssica pas a pas, polinomis fins a grau 4 entre grau 2 o 3.</p>
+      </div>
+      <div class="menu-card" onclick="iniciarBloc(2)">
+        <div class="icon">📊</div>
+        <h2>Regla de Ruffini</h2>
+        <p>Divisió per Ruffini pas a pas, polinomis fins a grau 5.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="exercici" class="ex-screen">
+    <button class="back-btn" onclick="tornarMenu()">← Tornar al menú</button>
+    <div class="progress-label" id="prog-label"></div>
+    <div class="progress-bar"><div class="progress-fill" id="prog-fill"></div></div>
+    <div class="ex-card">
+      <span class="tag" id="ex-tag"></span>
+      <div class="pregunta" id="ex-pregunta"></div>
+      <div class="math-display" id="ex-math"></div>
+      <div id="ex-cos"></div>
+    </div>
+    <div class="feedback" id="fb-ok"></div>
+    <div class="feedback" id="fb-error"></div>
+    <div class="feedback" id="fb-pista"></div>
+    <div class="feedback" id="fb-sol"></div>
+    <div class="nav-row">
+      <button class="btn btn-primary" id="btn-seguent" onclick="seguent()" style="display:none"></button>
+    </div>
+  </div>
+
+  <div id="resultat" class="ex-screen">
+    <div class="result-card">
+      <div class="stars" id="res-stars"></div>
+      <div class="score" id="res-score"></div>
+      <div class="score-label" id="res-label"></div>
+      <div style="margin-top:1.5rem;display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="tornarMenu()">Tornar al menú</button>
+        <button class="btn btn-secondary" onclick="repetirBloc()">Repetir bloc</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// =====================================================================
+// MOTOR ALGEBRAIC
+// =====================================================================
+function parsePolinomi(s) {
+  if (!s) return null;
+  s = s.replace(/\s+/g,'')
+       .replace(/−/g,'-').replace(/–/g,'-')
+       .replace(/²/g,'^2').replace(/³/g,'^3').replace(/⁴/g,'^4').replace(/⁵/g,'^5')
+       .replace(/·/g,'*').replace(/×/g,'*')
+       .toLowerCase();
+  s = s.replace(/([a-z0-9\)])(-)/g, '$1+$2');
+  const termes = s.split('+').filter(t => t !== '');
+  const mapa = {};
+  for (let t of termes) {
+    t = t.trim();
+    if (t === '') continue;
+    let coef = 1, clau;
+    if (/^-?[0-9.]+$/.test(t)) {
+      coef = parseFloat(t); clau = '1';
+    } else if (/^(-?[0-9.]*)x(\^([0-9]+))?$/.test(t)) {
+      const m = t.match(/^(-?[0-9.]*)x(\^([0-9]+))?$/);
+      coef = (m[1]===''||m[1]==='+')?1:m[1]==='-'?-1:parseFloat(m[1]);
+      const g = m[3]?parseInt(m[3]):1;
+      clau = g===0?'1':'x^'+g;
+    } else if (/^(-?[0-9.]*)xy$/.test(t)) {
+      const m = t.match(/^(-?[0-9.]*)xy$/);
+      coef = (m[1]===''||m[1]==='+')?1:m[1]==='-'?-1:parseFloat(m[1]);
+      clau = 'xy';
+    } else if (/^(-?[0-9.]*)y(\^([0-9]+))?$/.test(t)) {
+      const m = t.match(/^(-?[0-9.]*)y(\^([0-9]+))?$/);
+      coef = (m[1]===''||m[1]==='+')?1:m[1]==='-'?-1:parseFloat(m[1]);
+      const g = m[3]?parseInt(m[3]):1;
+      clau = 'y^'+g;
+    } else { return null; }
+    mapa[clau] = (mapa[clau]||0) + coef;
+  }
+  for (const k in mapa) if (Math.abs(mapa[k]) < 0.001) delete mapa[k];
+  return mapa;
+}
+
+function polinomisIguals(a, b) {
+  const pa = parsePolinomi(a), pb = parsePolinomi(b);
+  if (!pa || !pb) return normalitzarText(a) === normalitzarText(b);
+  const ka = Object.keys(pa).sort(), kb = Object.keys(pb).sort();
+  if (ka.join(',') !== kb.join(',')) return false;
+  return ka.every(k => Math.abs(pa[k]-pb[k]) < 0.001);
+}
+
+function normalitzarText(s) {
+  return (s||'').replace(/\s+/g,'').replace(/−/g,'-')
+    .replace(/²/g,'^2').replace(/³/g,'^3').replace(/⁴/g,'^4').replace(/⁵/g,'^5')
+    .replace(/·/g,'').replace(/×/g,'').toLowerCase();
+}
+
+function diagnosticarError(resp, sol) {
+  const pa = parsePolinomi(resp), ps = parsePolinomi(sol);
+  if (!pa || !ps) return null;
+  const ks = Object.keys(ps), ka = Object.keys(pa);
+  const grauS = Math.max(...ks.map(k=>k==='1'?0:k==='xy'?2:parseInt((k.match(/\d+/)||['1'])[0])));
+  const grauA = Math.max(...ka.map(k=>k==='1'?0:k==='xy'?2:parseInt((k.match(/\d+/)||['1'])[0])));
+  if (grauA !== grauS) return `El grau no és correcte (hauria de ser grau ${grauS}).`;
+  for (const k of ks) {
+    if (!(k in pa)) return `Falta el terme en ${k==='1'?'la constant':k==='xy'?'xy':k}.`;
+    if (Math.abs(pa[k]-ps[k])>0.001) {
+      const nom = k==='1'?'la constant':k==='x^1'?'x':k;
+      return `El coeficient de ${nom} no és correcte.`;
+    }
+  }
+  if (ka.length > ks.length) return 'Tens termes de més; comprova si has simplificat bé.';
+  return null;
+}
+
+// =====================================================================
+// DADES: IDENTITATS NOTABLES
+// =====================================================================
+const FORMULES = {
+  quadrat_suma: "(a + b)² = a² + 2·a·b + b²",
+  quadrat_dif:  "(a − b)² = a² − 2·a·b + b²",
+  suma_dif:     "(a + b)·(a − b) = a² − b²",
+};
+
+const identitats = [
+  { tag:"Identitat notable", enunciat:"Desenvolupa el quadrat de la suma:", expr:"(x + 5)²",
+    solucio:"x² + 10x + 25", formula:"quadrat_suma",
+    pistes:["Aplica (a + b)² = a² + 2ab + b² amb a = x, b = 5","El terme central és 2·x·5 = 10x","El terme independent és 5² = 25"] },
+  { tag:"Identitat notable", enunciat:"Desenvolupa el quadrat de la diferència:", expr:"(x − 3)²",
+    solucio:"x² − 6x + 9", formula:"quadrat_dif",
+    pistes:["Aplica (a − b)² = a² − 2ab + b² amb a = x, b = 3","El terme central és −2·x·3 = −6x","El terme independent és 3² = 9"] },
+  { tag:"Identitat notable", enunciat:"Desenvolupa la suma per diferència:", expr:"(x + 4)(x − 4)",
+    solucio:"x² − 16", formula:"suma_dif",
+    pistes:["Aplica (a + b)(a − b) = a² − b² amb a = x, b = 4","Desapareix el terme central","El resultat és x² − 4² = x² − 16"] },
+  { tag:"Identitat notable", enunciat:"Desenvolupa el quadrat de la suma:", expr:"(2x + 3)²",
+    solucio:"4x² + 12x + 9", formula:"quadrat_suma",
+    pistes:["Aplica (a + b)² amb a = 2x, b = 3","(2x)² = 4x²","2·(2x)·3 = 12x i 3² = 9"] },
+  { tag:"Identitat notable", enunciat:"Desenvolupa el quadrat de la diferència:", expr:"(3x − y)²",
+    solucio:"9x² − 6xy + y²", formula:"quadrat_dif",
+    pistes:["Aplica (a − b)² amb a = 3x, b = y","(3x)² = 9x²","2·(3x)·y = 6xy; signe negatiu al terme central"] },
+  { tag:"Identitat notable", enunciat:"Troba la identitat notable factoritzada:", expr:"x² + 14x + 49",
+    solucio:"(x + 7)²", formula:"quadrat_suma",
+    pistes:["Reconeix: 49 = 7² i 14 = 2·7","Aplica a² + 2ab + b² = (a + b)²","Aquí a = x, b = 7 → (x + 7)²"] },
+  { tag:"Identitat notable", enunciat:"Troba la identitat notable factoritzada:", expr:"x² − 10x + 25",
+    solucio:"(x − 5)²", formula:"quadrat_dif",
+    pistes:["Reconeix: 25 = 5² i 10 = 2·5","Aplica a² − 2ab + b² = (a − b)²","Aquí a = x, b = 5 → (x − 5)²"] },
+  { tag:"Identitat notable", enunciat:"Troba la identitat notable factoritzada:", expr:"x² − 81",
+    solucio:"(x + 9)(x − 9)", formula:"suma_dif",
+    pistes:["Reconeix: 81 = 9²","Aplica a² − b² = (a + b)(a − b)","Aquí a = x, b = 9"] },
+  { tag:"Identitat notable", enunciat:"Desenvolupa el quadrat de la suma:", expr:"(x + 10)²",
+    solucio:"x² + 20x + 100", formula:"quadrat_suma",
+    pistes:["Aplica (a + b)² amb a = x, b = 10","2·x·10 = 20x","10² = 100"] },
+  { tag:"Identitat notable", enunciat:"Troba la identitat notable factoritzada:", expr:"4x² − 12x + 9",
+    solucio:"(2x − 3)²", formula:"quadrat_dif",
+    pistes:["Reconeix: 4x² = (2x)², 9 = 3²","Comprova que 12x = 2·(2x)·3","Aplica a² − 2ab + b² = (a − b)²"] },
+];
+
+// =====================================================================
+// DADES: DIVISIÓ PAS A PAS
+// =====================================================================
+const divisions = [
+  { tag:"Divisió", enunciat:"Divideix el polinomi:",
+    dividenc:"x³ + 2x² − x − 2", divisor:"x² − 1",
+    passos:[
+      { label:"1r terme del quocient: x³ ÷ x² =", sol:"x", hint:"Divideix el terme de major grau del dividend entre el de major grau del divisor." },
+      { label:"x · (x² − 1) = x³ − x. Resta al dividend. Nou dividend:", sol:"2x² − 2", hint:"(x³+2x²−x−2) − (x³−x) = 2x²−2." },
+      { label:"2n terme del quocient: 2x² ÷ x² =", sol:"2", hint:"2x² ÷ x² = 2." },
+      { label:"2 · (x² − 1) = 2x²−2. Resta al dividend. Residu:", sol:"0", hint:"(2x²−2) − (2x²−2) = 0." },
+    ],
+    quocient:"x + 2", residu:"0",
+    pistes:["Divideix terme per terme del grau més alt al més baix","Cada terme del quocient = primer terme del dividend parcial ÷ primer terme del divisor","Recorda restar completament en cada pas"] },
+
+  { tag:"Divisió", enunciat:"Divideix el polinomi:",
+    dividenc:"x⁴ − 1", divisor:"x² + 1",
+    passos:[
+      { label:"1r terme del quocient: x⁴ ÷ x² =", sol:"x²", hint:"x⁴ ÷ x² = x²." },
+      { label:"x² · (x² + 1) = x⁴+x². Resta al dividend (x⁴−1). Nou dividend:", sol:"−x² − 1", hint:"(x⁴−1) − (x⁴+x²) = −x²−1." },
+      { label:"2n terme del quocient: −x² ÷ x² =", sol:"−1", hint:"−x² ÷ x² = −1." },
+      { label:"−1 · (x² + 1) = −x²−1. Resta. Residu:", sol:"0", hint:"(−x²−1) − (−x²−1) = 0." },
+    ],
+    quocient:"x² − 1", residu:"0",
+    pistes:["El dividenc és x⁴ − 1, no té termes intermedis","1r terme del quocient: x⁴ ÷ x² = x²","Multiplica, resta i obté el nou dividend parcial"] },
+
+  { tag:"Divisió", enunciat:"Divideix el polinomi:",
+    dividenc:"2x³ + 3x² − 2x − 3", divisor:"x + 1",
+    passos:[
+      { label:"1r terme del quocient: 2x³ ÷ x =", sol:"2x²", hint:"2x³ ÷ x = 2x²." },
+      { label:"2x² · (x + 1) = 2x³+2x². Resta. Nou dividend:", sol:"x² − 2x − 3", hint:"(2x³+3x²−2x−3)−(2x³+2x²) = x²−2x−3." },
+      { label:"2n terme del quocient: x² ÷ x =", sol:"x", hint:"x² ÷ x = x." },
+      { label:"x · (x + 1) = x²+x. Resta. Nou dividend:", sol:"−3x − 3", hint:"(x²−2x−3)−(x²+x) = −3x−3." },
+      { label:"3r terme del quocient: −3x ÷ x =", sol:"−3", hint:"−3x ÷ x = −3." },
+      { label:"−3 · (x + 1) = −3x−3. Resta. Residu:", sol:"0", hint:"(−3x−3)−(−3x−3) = 0." },
+    ],
+    quocient:"2x² + x − 3", residu:"0",
+    pistes:["Divideix terme per terme del grau més alt al més baix","Cada pas: nou terme del quocient = primer terme dividend parcial ÷ x","No oblidis restar tots els termes en cada pas"] },
+
+  { tag:"Divisió", enunciat:"Divideix el polinomi:",
+    dividenc:"x³ − 6x² + 11x − 6", divisor:"x² − 3x + 2",
+    passos:[
+      { label:"1r terme del quocient: x³ ÷ x² =", sol:"x", hint:"x³ ÷ x² = x." },
+      { label:"x · (x²−3x+2) = x³−3x²+2x. Resta. Nou dividend:", sol:"−3x² + 9x − 6", hint:"(x³−6x²+11x−6)−(x³−3x²+2x) = −3x²+9x−6." },
+      { label:"2n terme del quocient: −3x² ÷ x² =", sol:"−3", hint:"−3x² ÷ x² = −3." },
+      { label:"−3 · (x²−3x+2) = −3x²+9x−6. Resta. Residu:", sol:"0", hint:"(−3x²+9x−6)−(−3x²+9x−6) = 0." },
+    ],
+    quocient:"x − 3", residu:"0",
+    pistes:["1r terme del quocient: x³ ÷ x² = x","Multiplica x per tot el divisor i resta","Continua fins que el grau del dividend parcial sigui menor que el del divisor"] },
+
+  { tag:"Divisió", enunciat:"Divideix el polinomi:",
+    dividenc:"x⁴ + x³ − 3x² − 4x − 4", divisor:"x² + x − 2",
+    passos:[
+      { label:"1r terme del quocient: x⁴ ÷ x² =", sol:"x²", hint:"x⁴ ÷ x² = x²." },
+      { label:"x² · (x²+x−2) = x⁴+x³−2x². Resta. Nou dividend:", sol:"−x² − 4x − 4", hint:"(x⁴+x³−3x²−4x−4)−(x⁴+x³−2x²) = −x²−4x−4." },
+      { label:"2n terme del quocient: −x² ÷ x² =", sol:"−1", hint:"−x² ÷ x² = −1." },
+      { label:"−1 · (x²+x−2) = −x²−x+2. Resta. Residu:", sol:"−3x − 6", hint:"(−x²−4x−4)−(−x²−x+2) = −3x−6. Però si el quocient fos x²−2, el residu seria 0. Comprova: x²·(x²+x−2) = x⁴+x³−2x²; −2·(x²+x−2)= −2x²−2x+4. Suma: x⁴+x³−4x²−2x+4 ≠ original. Revisa el 2n terme." },
+    ],
+    quocient:"x² − 2", residu:"0",
+    pistes:["1r terme: x⁴ ÷ x² = x²","Després de restar queda −x²−4x−4","2n terme: −x² ÷ x² = −1... però comprova bé la resta!"] },
+
+  { tag:"Divisió", enunciat:"Divideix el polinomi:",
+    dividenc:"x³ − 4x + 3", divisor:"x² + 2x − 3",
+    passos:[
+      { label:"1r terme del quocient: x³ ÷ x² =", sol:"x", hint:"x³ ÷ x² = x. El dividenc no té terme en x²." },
+      { label:"x · (x²+2x−3) = x³+2x²−3x. Resta (recordant que x² té coef. 0). Nou dividend:", sol:"−2x² − x + 3", hint:"(x³+0x²−4x+3)−(x³+2x²−3x) = −2x²−x+3." },
+      { label:"2n terme del quocient: −2x² ÷ x² =", sol:"−2", hint:"−2x² ÷ x² = −2." },
+      { label:"−2 · (x²+2x−3) = −2x²−4x+6. Resta. Residu:", sol:"3x − 3", hint:"(−2x²−x+3)−(−2x²−4x+6) = 3x−3." },
+    ],
+    quocient:"x − 2", residu:"3x − 3",
+    pistes:["Atenció: falta el terme en x²; recorda-ho en fer les restes","1r terme: x³ ÷ x² = x","El residu no és 0 en aquest cas"] },
+
+  { tag:"Divisió", enunciat:"Divideix el polinomi:",
+    dividenc:"3x³ − 2x² − 5", divisor:"x² + 1",
+    passos:[
+      { label:"1r terme del quocient: 3x³ ÷ x² =", sol:"3x", hint:"3x³ ÷ x² = 3x." },
+      { label:"3x · (x²+1) = 3x³+3x. Resta (recordant que el terme en x té coef. 0). Nou dividend:", sol:"−2x² − 3x − 5", hint:"(3x³−2x²+0x−5)−(3x³+3x) = −2x²−3x−5." },
+      { label:"2n terme del quocient: −2x² ÷ x² =", sol:"−2", hint:"−2x² ÷ x² = −2." },
+      { label:"−2 · (x²+1) = −2x²−2. Resta. Residu:", sol:"−3x − 3", hint:"(−2x²−3x−5)−(−2x²−2) = −3x−3." },
+    ],
+    quocient:"3x − 2", residu:"−3x − 3",
+    pistes:["Atenció: el dividenc no té terme en x","3x³ ÷ x² = 3x","El residu no és 0; comprova l'últim pas"] },
+
+  { tag:"Divisió", enunciat:"Divideix el polinomi:",
+    dividenc:"x⁴ − 5x² + 4", divisor:"x² − 4",
+    passos:[
+      { label:"1r terme del quocient: x⁴ ÷ x² =", sol:"x²", hint:"x⁴ ÷ x² = x²." },
+      { label:"x² · (x²−4) = x⁴−4x². Resta (x⁴−5x²+4). Nou dividend:", sol:"−x² + 4", hint:"(x⁴−5x²+4)−(x⁴−4x²) = −x²+4." },
+      { label:"2n terme del quocient: −x² ÷ x² =", sol:"−1", hint:"−x² ÷ x² = −1." },
+      { label:"−1 · (x²−4) = −x²+4. Resta. Residu:", sol:"0", hint:"(−x²+4)−(−x²+4) = 0." },
+    ],
+    quocient:"x² − 1", residu:"0",
+    pistes:["Atenció: falten els termes en x³ i x","x⁴ ÷ x² = x²","El resultat és exacte (residu 0)"] },
+
+  { tag:"Divisió", enunciat:"Divideix el polinomi:",
+    dividenc:"2x⁴ + x³ − 3x + 1", divisor:"x² − x + 1",
+    passos:[
+      { label:"1r terme del quocient: 2x⁴ ÷ x² =", sol:"2x²", hint:"2x⁴ ÷ x² = 2x²." },
+      { label:"2x² · (x²−x+1) = 2x⁴−2x³+2x². Resta. Nou dividend:", sol:"3x³ − 2x² − 3x + 1", hint:"(2x⁴+x³+0x²−3x+1)−(2x⁴−2x³+2x²) = 3x³−2x²−3x+1." },
+      { label:"2n terme del quocient: 3x³ ÷ x² =", sol:"3x", hint:"3x³ ÷ x² = 3x." },
+      { label:"3x · (x²−x+1) = 3x³−3x²+3x. Resta. Nou dividend:", sol:"x² − 6x + 1", hint:"(3x³−2x²−3x+1)−(3x³−3x²+3x) = x²−6x+1." },
+      { label:"3r terme del quocient: x² ÷ x² =", sol:"1", hint:"x² ÷ x² = 1." },
+      { label:"1 · (x²−x+1) = x²−x+1. Resta. Residu:", sol:"−5x", hint:"(x²−6x+1)−(x²−x+1) = −5x." },
+    ],
+    quocient:"2x² + 3x + 1", residu:"−5x",
+    pistes:["Atenció: el dividenc no té terme en x²","Segueix pas a pas, cada terme del quocient = primer terme dividend parcial ÷ x²","El residu no és 0"] },
+
+  { tag:"Divisió", enunciat:"Divideix el polinomi:",
+    dividenc:"x³ + 8", divisor:"x + 2",
+    passos:[
+      { label:"1r terme del quocient: x³ ÷ x =", sol:"x²", hint:"x³ ÷ x = x². Recorda que x³+8 no té termes intermedis." },
+      { label:"x² · (x+2) = x³+2x². Resta (recordant coefs. nuls). Nou dividend:", sol:"−2x² + 8", hint:"(x³+0x²+0x+8)−(x³+2x²) = −2x²+8." },
+      { label:"2n terme del quocient: −2x² ÷ x =", sol:"−2x", hint:"−2x² ÷ x = −2x." },
+      { label:"−2x · (x+2) = −2x²−4x. Resta. Nou dividend:", sol:"4x + 8", hint:"(−2x²+0x+8)−(−2x²−4x) = 4x+8." },
+      { label:"3r terme del quocient: 4x ÷ x =", sol:"4", hint:"4x ÷ x = 4." },
+      { label:"4 · (x+2) = 4x+8. Resta. Residu:", sol:"0", hint:"(4x+8)−(4x+8) = 0." },
+    ],
+    quocient:"x² − 2x + 4", residu:"0",
+    pistes:["Atenció: x³+8 no té termes en x² ni x; tingues-ho en compte en les restes","1r terme: x³ ÷ x = x²","El resultat és exacte (residu 0)"] },
+];
+
+// =====================================================================
+// DADES: RUFFINI PAS A PAS
+// =====================================================================
+const rufinis = [
+  { tag:"Ruffini", enunciat:"Aplica la regla de Ruffini per dividir entre (x − 2):",
+    expr:"x³ − 6x² + 11x − 6", arrel:2, coefs:[1,-6,11,-6],
+    quocient:"x² − 4x + 3", residu:"0",
+    pistes:["L'arrel és r = 2 (el valor que fa x − 2 = 0)","Baixa el primer coeficient, multiplica per 2 i suma al següent","Seqüència: 1 | −6+2=−4 | 11+(−8)=3 | −6+6=0"] },
+  { tag:"Ruffini", enunciat:"Aplica la regla de Ruffini per dividir entre (x + 1):",
+    expr:"x³ + 2x² − x − 2", arrel:-1, coefs:[1,2,-1,-2],
+    quocient:"x² + x − 2", residu:"0",
+    pistes:["(x + 1) correspon a arrel r = −1","Baixa el primer coeficient (1), multiplica per −1 i suma al següent","Seqüència: 1 | 2+(−1)=1 | −1+(−1)=−2 | −2+2=0"] },
+  { tag:"Ruffini", enunciat:"Aplica la regla de Ruffini per dividir entre (x − 3):",
+    expr:"x⁴ − 5x³ + 5x² + 4x − 3", arrel:3, coefs:[1,-5,5,4,-3],
+    quocient:"x³ − 2x² − x + 1", residu:"0",
+    pistes:["L'arrel és r = 3","Seqüència: 1 | −5+3=−2 | 5+(−6)=−1 | 4+(−3)=1 | −3+3=0","El quocient és de grau 3 (un menys que el dividend)"] },
+  { tag:"Ruffini", enunciat:"Aplica la regla de Ruffini per dividir entre (x − 1):",
+    expr:"2x³ − 3x² + 1", arrel:1, coefs:[2,-3,0,1],
+    quocient:"2x² − x − 1", residu:"0",
+    pistes:["Atenció: el terme en x no apareix; el seu coeficient és 0 a la taula","L'arrel és r = 1","Seqüència: 2 | −3+2=−1 | 0+(−1)=−1 | 1+(−1)=0"] },
+  { tag:"Ruffini", enunciat:"Aplica la regla de Ruffini per dividir entre (x + 2):",
+    expr:"x³ − 4x − 3", arrel:-2, coefs:[1,0,-4,-3],
+    quocient:"x² − 2x", residu:"−3",
+    pistes:["(x + 2) correspon a arrel r = −2; el terme en x² té coeficient 0","Seqüència: 1 | 0+(−2)=−2 | −4+4=0 | −3+0=−3","El residu és −3, no 0"] },
+  { tag:"Ruffini", enunciat:"Aplica la regla de Ruffini per dividir entre (x − 2):",
+    expr:"x⁵ − 32", arrel:2, coefs:[1,0,0,0,0,-32],
+    quocient:"x⁴ + 2x³ + 4x² + 8x + 16", residu:"0",
+    pistes:["x⁵ − 32 té 4 coeficients intermedis = 0","Seqüència: 1 | 2 | 4 | 8 | 16 | 0","Recorda: 2⁵ = 32, per tant el residu és 0"] },
+  { tag:"Ruffini", enunciat:"Aplica la regla de Ruffini per dividir entre (x − 1):",
+    expr:"x⁴ − x³ − x + 1", arrel:1, coefs:[1,-1,0,-1,1],
+    quocient:"x³ − x", residu:"0",
+    pistes:["Atenció: el terme en x² no apareix (coeficient 0)","L'arrel és r = 1","Seqüència: 1 | −1+1=0 | 0+0=0 | −1+0=−1 | 1+(−1)=0"] },
+  { tag:"Ruffini", enunciat:"Aplica la regla de Ruffini per dividir entre (x + 3):",
+    expr:"x³ + 6x² + 11x + 6", arrel:-3, coefs:[1,6,11,6],
+    quocient:"x² + 3x + 2", residu:"0",
+    pistes:["(x + 3) correspon a r = −3","Seqüència: 1 | 6+(−3)=3 | 11+(−9)=2 | 6+(−6)=0","El residu hauria de ser 0"] },
+  { tag:"Ruffini", enunciat:"Aplica la regla de Ruffini per dividir entre (x − 4):",
+    expr:"x³ − 3x² − 10x + 24", arrel:4, coefs:[1,-3,-10,24],
+    quocient:"x² + x − 6", residu:"0",
+    pistes:["L'arrel és r = 4","Seqüència: 1 | −3+4=1 | −10+4=−6 | 24+(−24)=0","Comprova que el residu és 0"] },
+  { tag:"Ruffini", enunciat:"Aplica la regla de Ruffini per dividir entre (x − 2):",
+    expr:"3x⁴ − 5x³ − x + 2", arrel:2, coefs:[3,-5,0,-1,2],
+    quocient:"3x³ + x² + 2x + 3", residu:"8",
+    pistes:["L'arrel és r = 2; el terme en x² té coeficient 0","Seqüència: 3 | −5+6=1 | 0+2=2 | −1+4=3 | 2+6=8","El residu és 8, no 0"] },
+];
+
+// =====================================================================
+// ESTAT GLOBAL
+// =====================================================================
+let blocActual=-1, exActual=0, encerts=0;
+let pistesUsades=0, solucioMostrada=false, dadaBloc=[];
+let rufPas=0, rufResultats=[];
+let divPas=0;
+
+// =====================================================================
+// NAVEGACIÓ
+// =====================================================================
+function iniciarBloc(b) {
+  blocActual=b; exActual=0; encerts=0;
+  dadaBloc=[identitats,divisions,rufinis][b];
+  document.getElementById("menu").style.display="none";
+  document.getElementById("resultat").style.display="none";
+  document.getElementById("exercici").classList.add("active");
+  mostrarExercici();
+}
+function tornarMenu() {
+  document.getElementById("menu").style.display="block";
+  document.getElementById("exercici").classList.remove("active");
+  document.getElementById("resultat").style.display="none";
+}
+function repetirBloc() { iniciarBloc(blocActual); }
+
+function actualitzarProgress() {
+  document.getElementById("prog-fill").style.width=((exActual+1)/dadaBloc.length*100)+"%";
+  document.getElementById("prog-label").textContent=`Exercici ${exActual+1} de ${dadaBloc.length}`;
+}
+function netejarFeedback() {
+  ["fb-ok","fb-error","fb-pista","fb-sol"].forEach(id=>{
+    const el=document.getElementById(id); el.className="feedback"; el.innerHTML="";
+  });
+}
+function mostrarExercici() {
+  netejarFeedback();
+  pistesUsades=0; solucioMostrada=false; rufPas=0; rufResultats=[]; divPas=0;
+  actualitzarProgress();
+  const d=dadaBloc[exActual];
+  document.getElementById("ex-tag").textContent=d.tag;
+  document.getElementById("btn-seguent").style.display="none";
+  if(blocActual===0) mostrarIdentitat(d);
+  else if(blocActual===1) mostrarDivisio(d);
+  else mostrarRuffini(d);
+}
+function seguent() {
+  exActual++;
+  if(exActual>=dadaBloc.length) mostrarResultat();
+  else mostrarExercici();
+}
+
+// =====================================================================
+// BLOC 0: IDENTITATS
+// =====================================================================
+function mostrarIdentitat(d) {
+  document.getElementById("ex-pregunta").innerHTML=d.enunciat;
+  document.getElementById("ex-math").textContent=d.expr;
+  const f=FORMULES[d.formula]||"";
+  document.getElementById("ex-cos").innerHTML=`
+    <div class="formula-box">
+      <button class="formula-toggle" onclick="toggleFormula(this)">
+        <span>Recordatori de fórmules</span><span id="arr">▸</span>
+      </button>
+      <div class="formula-body" id="fbody">
+        <div style="margin-bottom:4px;">${f}</div>
+        <div style="font-size:0.8rem;color:#888780;font-family:Georgia,serif;">(a i b són els dos termes de l'expressió)</div>
+      </div>
+    </div>
+    <div style="margin-top:0.75rem;">
+      <label class="small">La teva resposta:</label>
+      <input class="resp-input" id="resp" placeholder="Escriu la resposta..." autocomplete="off"
+        onkeydown="if(event.key==='Enter') comprovarId()">
+    </div>
+    <div class="mathkbd" id="kbd-id"></div>
+    <div class="action-row">
+      <button class="btn btn-primary" onclick="comprovarId()">Comprovar</button>
+      <button class="btn btn-secondary" onclick="donarPista()">💡 Pista</button>
+      <button class="btn btn-secondary" onclick="veureSolucio()">👁 Veure solució</button>
+    </div>`;
+  renderKbd("kbd-id","resp");
+  setTimeout(()=>document.getElementById("resp").focus(),50);
+}
+
+function toggleFormula(btn) {
+  const body=btn.nextElementSibling;
+  const open=body.classList.toggle("open");
+  btn.querySelector("span:last-child").textContent=open?"▾":"▸";
+}
+
+function comprovarId() {
+  if(solucioMostrada) return;
+  const d=dadaBloc[exActual];
+  const r=document.getElementById("resp");
+  const val=r.value.trim(); if(!val) return;
+  if(polinomisIguals(val,d.solucio)) {
+    r.classList.add("correct");
+    mostrarFb("fb-ok","ok","✓ Correcte! La resposta és: "+d.solucio);
+    encerts++;
+    acabarExercici();
+  } else {
+    r.classList.add("wrong");
+    const diag=diagnosticarError(val,d.solucio);
+    mostrarFb("fb-error","error","✗ No és correcte. "+(diag||"Comprova cada terme de la fórmula."));
+    setTimeout(()=>{r.classList.remove("wrong");r.focus();},1500);
+  }
+}
+
+// =====================================================================
+// BLOC 1: DIVISIÓ PAS A PAS
+// =====================================================================
+function mostrarDivisio(d) {
+  document.getElementById("ex-pregunta").innerHTML=d.enunciat;
+  document.getElementById("ex-math").textContent=`(${d.dividenc}) ÷ (${d.divisor})`;
+  divPas=0;
+  renderDivisio(d);
+}
+
+function renderDivisio(d) {
+  const n=d.passos.length;
+  let html='<div style="margin-top:0.5rem;">';
+  for(let i=0;i<n;i++) {
+    const p=d.passos[i];
+    if(i<divPas) {
+      html+=`<div class="div-pas fet">
+        <div class="pas-label">Pas ${i+1} ✓</div>
+        <div class="pas-row"><span>${p.label}</span>
+          <input class="pas-in ok" value="${p.sol}" disabled>
+        </div></div>`;
+    } else if(i===divPas) {
+      html+=`<div class="div-pas actiu">
+        <div class="pas-label">Pas ${i+1} de ${n}</div>
+        <div class="pas-row"><span>${p.label}</span>
+          <input class="pas-in" id="div-in" placeholder="..." autocomplete="off"
+            onkeydown="if(event.key==='Enter') comprovarDivPas()">
+        </div>
+        <div class="mathkbd" id="kbd-div" style="margin-top:6px;"></div>
+        <div class="action-row">
+          <button class="btn btn-primary" onclick="comprovarDivPas()">Comprovar pas</button>
+          <button class="btn btn-secondary" onclick="pistaDivPas()">💡 Pista del pas</button>
+          ${!solucioMostrada?`<button class="btn btn-secondary" onclick="veureSolucio()">👁 Solució</button>`:''}
+        </div></div>`;
+    } else {
+      html+=`<div class="div-pas pendent">
+        <div class="pas-label">Pas ${i+1}</div>
+        <div class="pas-row"><span>${p.label}</span></div>
+      </div>`;
+    }
+  }
+  html+='</div>';
+  document.getElementById("ex-cos").innerHTML=html;
+  if(divPas<n) {
+    renderKbd("kbd-div","div-in");
+    setTimeout(()=>{const el=document.getElementById("div-in");if(el)el.focus();},50);
+  }
+}
+
+function comprovarDivPas() {
+  const d=dadaBloc[exActual];
+  const inp=document.getElementById("div-in"); if(!inp) return;
+  const val=inp.value.trim(); if(!val) return;
+  const pas=d.passos[divPas];
+  if(polinomisIguals(val,pas.sol)) {
+    divPas++;
+    netejarFeedback();
+    renderDivisio(d);
+    if(divPas>=d.passos.length) {
+      mostrarFb("fb-ok","ok","✓ Excel·lent! Has completat tota la divisió.\nQuocient: "+d.quocient+" · Residu: "+d.residu);
+      encerts++; acabarExercici();
+    } else {
+      mostrarFb("fb-ok","ok","✓ Correcte! Segueix amb el pas "+(divPas+1)+".");
+    }
+  } else {
+    inp.classList.add("err");
+    const diag=diagnosticarError(val,pas.sol);
+    mostrarFb("fb-error","error","✗ No és correcte. "+(diag||"Torna-ho a intentar."));
+    setTimeout(()=>{inp.classList.remove("err");inp.focus();},1500);
+  }
+}
+
+function pistaDivPas() {
+  const d=dadaBloc[exActual];
+  if(divPas<d.passos.length) mostrarFb("fb-pista","pista","💡 "+d.passos[divPas].hint);
+}
+
+// =====================================================================
+// BLOC 2: RUFFINI PAS A PAS
+// =====================================================================
+function mostrarRuffini(d) {
+  document.getElementById("ex-pregunta").innerHTML=d.enunciat;
+  document.getElementById("ex-math").textContent=d.expr;
+  rufPas=0;
+  rufResultats=new Array(d.coefs.length).fill(null);
+  renderRuffini(d);
+}
+
+function renderRuffini(d) {
+  const n=d.coefs.length, ar=d.arrel;
+
+  // Capçalera de graus
+  let cap='<tr><td class="cap"></td>';
+  for(let i=n-1;i>=0;i--) {
+    const exp=i===0?'cte':i===1?'x':'x'+['','','²','³','⁴','⁵'][i];
+    cap+=`<td class="cap">${exp}</td>`;
+  }
+  cap+='</tr>';
+
+  // Fila de coeficients
+  let cf=`<tr><td class="arrel-cel">${ar}</td>`;
+  d.coefs.forEach(c=>cf+=`<td>${c}</td>`);
+  cf+='</tr>';
+
+  // Fila de productes
+  let pf='<tr><td></td><td></td>';
+  for(let i=1;i<n;i++) {
+    if(rufResultats[i-1]!==null) {
+      const pv=rufResultats[i-1]*ar;
+      pf+=`<td class="prod-cel">${pv>=0?'+'+pv:pv}</td>`;
+    } else {
+      pf+='<td class="prod-cel"></td>';
+    }
+  }
+  pf+='</tr>';
+
+  // Fila de resultats
+  let rf='<tr class="linia"><td></td>';
+  for(let i=0;i<n;i++) {
+    if(i<rufPas) {
+      rf+=`<td class="fet-cel">${rufResultats[i]}</td>`;
+    } else if(i===rufPas) {
+      rf+=`<td><input class="ruf-in" id="ruf-in" type="text" placeholder="?" autocomplete="off"
+        onkeydown="if(event.key==='Enter') comprovarRufPas()" style="width:54px;"></td>`;
+    } else {
+      rf+=`<td class="pend-cel">?</td>`;
+    }
+  }
+  rf+='</tr>';
+
+  // Instrucció contextual
+  let instr='';
+  if(rufPas<n) {
+    if(rufPas===0) {
+      instr=`<p style="font-size:0.9rem;color:#3c3489;margin-top:0.75rem;">Baixa el primer coeficient directament: <strong>${d.coefs[0]}</strong></p>`;
+    } else {
+      const prod=rufResultats[rufPas-1]*ar;
+      instr=`<p style="font-size:0.9rem;color:#3c3489;margin-top:0.75rem;">
+        Producte: <strong>${rufResultats[rufPas-1]}</strong> × <strong>${ar}</strong> = <strong>${prod}</strong>.
+        Ara suma amb el coeficient <strong>${d.coefs[rufPas]}</strong>. Quant val?
+      </p>`;
+    }
+  }
+
+  const acabat=rufPas>=n;
+  document.getElementById("ex-cos").innerHTML=`
+    <div style="overflow-x:auto;margin-top:0.75rem;">
+      <table class="ruf-table">${cap}${cf}${pf}${rf}</table>
+    </div>
+    ${instr}
+    ${!acabat?`
+    <div class="mathkbd" id="kbd-ruf"></div>
+    <div class="action-row">
+      <button class="btn btn-primary" onclick="comprovarRufPas()">Comprovar</button>
+      <button class="btn btn-secondary" onclick="donarPista()">💡 Pista</button>
+      ${!solucioMostrada?`<button class="btn btn-secondary" onclick="veureSolucio()">👁 Solució</button>`:''}
+    </div>`:''}`;
+
+  if(!acabat) {
+    renderKbd("kbd-ruf","ruf-in");
+    setTimeout(()=>{const el=document.getElementById("ruf-in");if(el)el.focus();},50);
+  }
+}
+
+function comprovarRufPas() {
+  const d=dadaBloc[exActual];
+  const n=d.coefs.length, ar=d.arrel;
+  const inp=document.getElementById("ruf-in"); if(!inp) return;
+  const val=inp.value.trim(); if(!val) return;
+
+  const correcte = rufPas===0 ? d.coefs[0] : d.coefs[rufPas] + rufResultats[rufPas-1]*ar;
+  const valNum=parseFloat(val.replace(/−/g,'-').replace(/\s/g,''));
+
+  if(!isNaN(valNum) && Math.abs(valNum-correcte)<0.001) {
+    rufResultats[rufPas]=correcte;
+    rufPas++;
+    netejarFeedback();
+    renderRuffini(d);
+    if(rufPas>=n) {
+      mostrarFb("fb-ok","ok","✓ Excel·lent! Has completat Ruffini.\nQuocient: "+d.quocient+" · Residu: "+d.residu);
+      encerts++; acabarExercici();
+    } else if(rufPas===n-1) {
+      mostrarFb("fb-ok","ok","✓ Correcte! L'últim valor serà el residu.");
+    } else {
+      mostrarFb("fb-ok","ok","✓ Correcte! Segueix amb la columna "+(rufPas+1)+".");
+    }
+  } else {
+    inp.classList.add("err");
+    let msg="";
+    if(rufPas===0) {
+      msg=`El primer valor és simplement el primer coeficient del polinomi: ${d.coefs[0]}.`;
+    } else {
+      const prod=rufResultats[rufPas-1]*ar;
+      msg=`Recorda: ${rufResultats[rufPas-1]} × ${ar} = ${prod}. Ara suma-ho amb ${d.coefs[rufPas]}: ${prod}+${d.coefs[rufPas]} = ${correcte}.`;
+    }
+    mostrarFb("fb-error","error","✗ No és correcte. "+msg);
+    setTimeout(()=>{inp.classList.remove("err");inp.value="";inp.focus();},1800);
+  }
+}
+
+// =====================================================================
+// PISTES I SOLUCIÓ GENERALS
+// =====================================================================
+function donarPista() {
+  const d=dadaBloc[exActual];
+  if(pistesUsades>=d.pistes.length) {
+    mostrarFb("fb-pista","pista","Ja has vist totes les pistes disponibles!"); return;
+  }
+  pistesUsades++;
+  mostrarFb("fb-pista","pista",`<strong>Pista ${pistesUsades}/${d.pistes.length}:</strong> ${d.pistes[pistesUsades-1]}`);
+}
+
+function veureSolucio() {
+  const d=dadaBloc[exActual]; solucioMostrada=true;
+  let text=blocActual===0?`Solució: <strong>${d.solucio}</strong>`
+    :`Solució → Quocient: <strong>${d.quocient}</strong> · Residu: <strong>${d.residu}</strong>`;
+  mostrarFb("fb-sol","solucio","👁 "+text);
+  acabarExercici();
+}
+
+function acabarExercici() {
+  const btn=document.getElementById("btn-seguent");
+  btn.style.display="inline-block";
+  btn.textContent=exActual<dadaBloc.length-1?"Següent →":"Veure resultats";
+}
+
+// =====================================================================
+// TECLAT MATEMÀTIC
+// =====================================================================
+const TECLES=["x²","x³","x⁴","x⁵","−","²","³","⁴","(",")"," + "," − "];
+function renderKbd(cid, iid) {
+  const div=document.getElementById(cid); if(!div) return;
+  div.innerHTML=TECLES.map(t=>`<button type="button" onclick="ins('${iid}','${t}')">${t}</button>`).join('');
+}
+function ins(iid, s) {
+  const inp=document.getElementById(iid); if(!inp) return;
+  const st=inp.selectionStart, en=inp.selectionEnd;
+  inp.value=inp.value.substring(0,st)+s+inp.value.substring(en);
+  inp.selectionStart=inp.selectionEnd=st+s.length;
+  inp.focus();
+}
+
+// =====================================================================
+// FEEDBACK I RESULTATS
+// =====================================================================
+function mostrarFb(id,tipus,text) {
+  const el=document.getElementById(id);
+  el.className=`feedback ${tipus} show`;
+  el.innerHTML=text.replace(/\n/g,'<br>');
+}
+
+function mostrarResultat() {
+  document.getElementById("exercici").classList.remove("active");
+  document.getElementById("resultat").style.display="block";
+  const stars=encerts>=9?"⭐⭐⭐":encerts>=6?"⭐⭐":"⭐";
+  const msg=encerts>=9?"Excel·lent! Domines aquest bloc.":
+            encerts>=6?"Molt bé! Segueix practicant.":
+            "Continua practicant, ho aconseguiràs!";
+  document.getElementById("res-stars").textContent=stars;
+  document.getElementById("res-score").textContent=`${encerts} / ${dadaBloc.length}`;
+  document.getElementById("res-label").textContent=msg;
+}
+</script>
+</body>
+</html>
