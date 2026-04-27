@@ -32,242 +32,29 @@
     --radius-sm: 8px;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: var(--sans);
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    line-height: 1.6;
-  }
+  body { font-family: var(--sans); background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.6; }
 
   /* HEADER */
   .app-header {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 1rem 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 100;
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    padding: 0.85rem 1.5rem; display: flex; align-items: center;
+    justify-content: space-between; position: sticky; top: 0; z-index: 100;
   }
   .app-title { font-size: 1.1rem; font-weight: 700; color: var(--accent2); }
   .app-subtitle { font-size: 0.75rem; color: var(--text3); }
-  .progress-global {
-    display: flex; gap: 6px; align-items: center;
-  }
-  .star { font-size: 1.1rem; transition: transform 0.3s; }
-  .star.lit { color: var(--yellow); }
+  .stars-wrap { display: flex; gap: 5px; align-items: center; }
+  .star { font-size: 1.15rem; transition: transform 0.35s cubic-bezier(.34,1.56,.64,1), color 0.25s; }
+  .star.lit { color: var(--yellow); transform: scale(1.15); }
   .star.unlit { color: var(--border2); }
 
   /* LAYOUT */
   .container { max-width: 900px; margin: 0 auto; padding: 1.5rem; }
 
-  /* TABS */
-  .tabs {
-    display: flex; gap: 4px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 6px;
-    margin-bottom: 2rem;
-    overflow-x: auto;
-  }
-  .tab-btn {
-    flex: 1; min-width: 120px;
-    padding: 0.55rem 0.75rem;
-    border-radius: 10px;
-    border: none;
-    background: transparent;
-    color: var(--text2);
-    font-family: var(--sans);
-    font-size: 0.8rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-    white-space: nowrap;
-    text-align: center;
-  }
-  .tab-btn:hover { background: var(--surface2); color: var(--text); }
-  .tab-btn.active { background: var(--accent); color: #fff; font-weight: 600; }
-
-  /* SECTION HEADER */
-  .section-header {
-    margin-bottom: 1.5rem;
-  }
-  .section-title {
-    font-size: 1.4rem; font-weight: 700; color: var(--text);
-    margin-bottom: 0.25rem;
-  }
-  .section-desc {
-    font-size: 0.9rem; color: var(--text2);
-  }
-  .section-tag {
-    display: inline-block;
-    background: var(--accent);
-    color: #fff;
-    font-size: 0.7rem;
-    font-weight: 600;
-    padding: 2px 10px;
-    border-radius: 20px;
-    margin-bottom: 0.5rem;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-  }
-
-  /* EXERCISE CARD */
-  .exercise-grid {
-    display: flex; flex-direction: column; gap: 1rem;
-  }
-  .ex-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-    transition: border-color 0.2s;
-  }
-  .ex-card.solved { border-color: var(--green); }
-  .ex-card.wrong { border-color: var(--red); }
-  .ex-card-header {
-    padding: 1rem 1.25rem 0.75rem;
-    display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem;
-  }
-  .ex-num {
-    font-size: 0.72rem; font-weight: 700; color: var(--accent2);
-    text-transform: uppercase; letter-spacing: 0.08em;
-    background: rgba(108,99,255,0.12);
-    padding: 3px 10px; border-radius: 20px;
-    white-space: nowrap; flex-shrink: 0;
-  }
-  .ex-statement {
-    font-size: 1rem; font-weight: 500; color: var(--text);
-    flex: 1;
-  }
-  .math {
-    font-family: var(--mono);
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 2px 8px;
-    font-size: 0.95em;
-    color: var(--accent2);
-    display: inline-block;
-  }
-  .math-block {
-    font-family: var(--mono);
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 0.75rem 1rem;
-    font-size: 1.1rem;
-    color: var(--accent2);
-    margin: 0.5rem 0;
-    text-align: center;
-    letter-spacing: 0.02em;
-  }
-  .ex-body { padding: 0 1.25rem 1rem; }
-
-  /* HINTS */
-  .hints-area { margin-top: 0.75rem; }
-  .hint-btn {
-    display: flex; align-items: center; gap: 6px;
-    background: none; border: 1px solid var(--border2);
-    border-radius: var(--radius-sm);
-    color: var(--yellow); font-family: var(--sans); font-size: 0.82rem;
-    font-weight: 500; padding: 0.4rem 0.9rem; cursor: pointer;
-    margin-bottom: 0.5rem; transition: all 0.18s;
-  }
-  .hint-btn:hover { background: var(--yellow-bg); border-color: var(--yellow); }
-  .hint-icon { font-size: 0.9rem; }
-  .hints-list { display: flex; flex-direction: column; gap: 6px; margin-top: 0.5rem; }
-  .hint-item {
-    background: var(--yellow-bg);
-    border: 1px solid rgba(251,191,36,0.25);
-    border-radius: var(--radius-sm);
-    padding: 0.5rem 0.9rem;
-    font-size: 0.85rem; color: #fde68a;
-    display: flex; gap: 8px; align-items: flex-start;
-    animation: fadeIn 0.3s ease;
-  }
-  .hint-n { font-weight: 700; color: var(--yellow); min-width: 18px; }
-
-  /* SOLUTION */
-  .solution-area { margin-top: 0.75rem; }
-  .sol-btn {
-    background: none; border: 1px solid var(--border2);
-    border-radius: var(--radius-sm);
-    color: var(--blue); font-family: var(--sans); font-size: 0.82rem;
-    font-weight: 500; padding: 0.4rem 0.9rem; cursor: pointer;
-    transition: all 0.18s;
-  }
-  .sol-btn:hover { background: var(--blue-bg); border-color: var(--blue); }
-  .sol-box {
-    margin-top: 0.6rem;
-    background: var(--blue-bg);
-    border: 1px solid rgba(96,165,250,0.3);
-    border-radius: var(--radius-sm);
-    padding: 0.85rem 1rem;
-    animation: fadeIn 0.3s ease;
-  }
-  .sol-title { font-size: 0.72rem; font-weight: 700; color: var(--blue); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem; }
-  .sol-step { font-size: 0.88rem; color: #bfdbfe; margin-bottom: 4px; }
-  .sol-step .step-n { font-weight: 700; color: var(--blue); }
-  .sol-final {
-    font-family: var(--mono); color: var(--green);
-    font-size: 1rem; font-weight: 500;
-    margin-top: 0.5rem; padding-top: 0.5rem;
-    border-top: 1px solid rgba(96,165,250,0.2);
-  }
-
-  /* SELF-CHECK */
-  .check-area {
-    display: flex; gap: 8px; margin-top: 0.75rem; flex-wrap: wrap;
-  }
-  .check-ok {
-    background: var(--green-bg); border: 1px solid rgba(34,197,94,0.3);
-    color: var(--green); border-radius: var(--radius-sm);
-    padding: 0.4rem 1rem; font-family: var(--sans); font-size: 0.82rem;
-    font-weight: 600; cursor: pointer; transition: all 0.18s;
-  }
-  .check-ok:hover { border-color: var(--green); }
-  .check-ko {
-    background: var(--red-bg); border: 1px solid rgba(248,113,113,0.3);
-    color: var(--red); border-radius: var(--radius-sm);
-    padding: 0.4rem 1rem; font-family: var(--sans); font-size: 0.82rem;
-    font-weight: 600; cursor: pointer; transition: all 0.18s;
-  }
-  .check-ko:hover { border-color: var(--red); }
-  .result-badge {
-    display: flex; align-items: center; gap: 6px;
-    font-size: 0.85rem; font-weight: 600;
-    padding: 0.4rem 1rem; border-radius: var(--radius-sm);
-  }
-  .result-badge.ok { background: var(--green-bg); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
-  .result-badge.ko { background: var(--red-bg); color: var(--red); border: 1px solid rgba(248,113,113,0.3); }
-
-  /* DIVIDER */
-  .divider { border: none; border-top: 1px solid var(--border); margin: 1rem 0; }
-
-  /* SECTION HIDDEN */
-  .section { display: none; }
-  .section.active { display: block; }
-
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
-
-  /* Scrollbar */
-  ::-webkit-scrollbar { width: 6px; height: 6px; }
-  ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
-
-  /* Score panel */
+  /* SCORE PANEL */
   .score-panel {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1rem 1.25rem;
-    margin-bottom: 1.5rem;
-    display: flex; gap: 1.5rem; flex-wrap: wrap; align-items: center;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem; display: flex; gap: 1.5rem; flex-wrap: wrap; align-items: center;
   }
   .score-item { text-align: center; }
   .score-num { font-size: 1.6rem; font-weight: 700; }
@@ -275,15 +62,209 @@
   .score-num.green { color: var(--green); }
   .score-num.red { color: var(--red); }
   .score-num.accent { color: var(--accent2); }
-
   .reset-btn {
-    margin-left: auto;
-    background: none; border: 1px solid var(--border2);
+    margin-left: auto; background: none; border: 1px solid var(--border2);
     border-radius: var(--radius-sm); color: var(--text2);
     font-family: var(--sans); font-size: 0.8rem; font-weight: 500;
     padding: 0.4rem 1rem; cursor: pointer; transition: all 0.18s;
   }
   .reset-btn:hover { background: var(--surface2); color: var(--text); }
+
+  /* TABS */
+  .tabs {
+    display: flex; gap: 4px; background: var(--surface);
+    border: 1px solid var(--border); border-radius: 14px;
+    padding: 6px; margin-bottom: 2rem; overflow-x: auto;
+  }
+  .tab-btn {
+    flex: 1; min-width: 0; padding: 0.5rem 0.6rem;
+    border-radius: 10px; border: none; background: transparent;
+    color: var(--text2); font-family: var(--sans); font-size: 0.78rem;
+    font-weight: 500; cursor: pointer; transition: all 0.2s;
+    white-space: nowrap; text-align: center; display: flex;
+    flex-direction: column; align-items: center; gap: 3px;
+  }
+  .tab-btn:hover { background: var(--surface2); color: var(--text); }
+  .tab-btn.active { background: var(--accent); color: #fff; font-weight: 600; }
+  .tab-progress {
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.04em;
+    opacity: 0.85;
+  }
+  .tab-btn.active .tab-progress { color: rgba(255,255,255,0.85); }
+  .tab-btn:not(.active) .tab-progress { color: var(--text3); }
+
+  /* SECTION HEADER */
+  .section-header { margin-bottom: 1rem; }
+  .section-title { font-size: 1.35rem; font-weight: 700; color: var(--text); margin-bottom: 0.2rem; }
+  .section-desc { font-size: 0.88rem; color: var(--text2); }
+  .section-tag {
+    display: inline-block; background: var(--accent); color: #fff;
+    font-size: 0.68rem; font-weight: 700; padding: 2px 10px;
+    border-radius: 20px; margin-bottom: 0.4rem;
+    letter-spacing: 0.06em; text-transform: uppercase;
+  }
+
+  /* FORMULA REFERENCE BOX */
+  .formula-ref {
+    background: var(--surface2); border: 1px solid var(--border2);
+    border-radius: var(--radius-sm); padding: 1rem 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+  .formula-ref-title {
+    font-size: 0.68rem; font-weight: 700; color: var(--text3);
+    text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.6rem;
+  }
+  .formula-list { display: flex; flex-direction: column; gap: 0.4rem; }
+  .formula-row {
+    display: flex; align-items: center; gap: 0.75rem;
+    font-family: var(--mono); font-size: 0.92rem; color: var(--accent2);
+  }
+  .formula-row .f-label {
+    font-family: var(--sans); font-size: 0.72rem; font-weight: 600;
+    color: var(--text3); min-width: 36px; text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .formula-divider { border: none; border-top: 1px solid var(--border); margin: 0.4rem 0; }
+
+  /* RUFFINI SCHEME */
+  .ruffini-scheme {
+    font-family: var(--mono); font-size: 0.82rem; color: var(--text2);
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 0.75rem 1rem;
+    margin-bottom: 1.25rem; white-space: pre; overflow-x: auto;
+    line-height: 1.8;
+  }
+
+  /* EXERCISE CARD */
+  .exercise-grid { display: flex; flex-direction: column; gap: 1rem; }
+  .ex-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  .ex-card.solved { border-color: var(--green); }
+  .ex-card.wrong  { border-color: var(--red); }
+  .ex-card.flash-ok  { animation: flashOk 0.6s ease; }
+  .ex-card.flash-ko  { animation: flashKo 0.6s ease; }
+
+  @keyframes flashOk {
+    0%   { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
+    30%  { box-shadow: 0 0 0 6px rgba(34,197,94,0.35); }
+    100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
+  }
+  @keyframes flashKo {
+    0%   { box-shadow: 0 0 0 0 rgba(248,113,113,0); }
+    30%  { box-shadow: 0 0 0 6px rgba(248,113,113,0.35); }
+    100% { box-shadow: 0 0 0 0 rgba(248,113,113,0); }
+  }
+
+  .ex-card-header {
+    padding: 1rem 1.25rem 0.75rem;
+    display: flex; align-items: flex-start; gap: 0.75rem;
+  }
+  .ex-num {
+    font-size: 0.7rem; font-weight: 700; color: var(--accent2);
+    text-transform: uppercase; letter-spacing: 0.08em;
+    background: rgba(108,99,255,0.12); padding: 3px 10px;
+    border-radius: 20px; white-space: nowrap; flex-shrink: 0; margin-top: 2px;
+  }
+  .ex-statement { font-size: 1rem; font-weight: 500; color: var(--text); flex: 1; }
+  .math {
+    font-family: var(--mono); background: var(--surface2);
+    border: 1px solid var(--border); border-radius: 6px;
+    padding: 2px 8px; font-size: 0.95em; color: var(--accent2); display: inline-block;
+  }
+  .ex-body { padding: 0 1.25rem 1rem; }
+  .divider { border: none; border-top: 1px solid var(--border); margin: 0.75rem 0; }
+
+  /* HINTS */
+  .hints-area { margin-top: 0.5rem; }
+  .hint-btn {
+    display: flex; align-items: center; gap: 6px;
+    background: none; border: 1px solid var(--border2);
+    border-radius: var(--radius-sm); color: var(--yellow);
+    font-family: var(--sans); font-size: 0.82rem; font-weight: 500;
+    padding: 0.38rem 0.9rem; cursor: pointer; margin-bottom: 0.5rem;
+    transition: all 0.18s;
+  }
+  .hint-btn:hover:not(:disabled) { background: var(--yellow-bg); border-color: var(--yellow); }
+  .hint-btn:disabled { color: var(--text3); border-color: var(--border); cursor: default; }
+  .hints-list { display: flex; flex-direction: column; gap: 6px; }
+  .hint-item {
+    background: var(--yellow-bg); border: 1px solid rgba(251,191,36,0.2);
+    border-radius: var(--radius-sm); padding: 0.45rem 0.9rem;
+    font-size: 0.85rem; color: #fde68a;
+    display: flex; gap: 8px; align-items: flex-start;
+    animation: fadeIn 0.3s ease;
+  }
+  .hint-n { font-weight: 700; color: var(--yellow); min-width: 18px; }
+
+  /* SOLUTION */
+  .solution-area { margin-top: 0.65rem; }
+  .sol-btn {
+    background: none; border: 1px solid var(--border2); border-radius: var(--radius-sm);
+    color: var(--blue); font-family: var(--sans); font-size: 0.82rem;
+    font-weight: 500; padding: 0.38rem 0.9rem; cursor: pointer; transition: all 0.18s;
+  }
+  .sol-btn:hover { background: var(--blue-bg); border-color: var(--blue); }
+  .sol-box {
+    margin-top: 0.55rem; background: var(--blue-bg);
+    border: 1px solid rgba(96,165,250,0.25); border-radius: var(--radius-sm);
+    padding: 0.85rem 1rem; animation: fadeIn 0.3s ease;
+  }
+  .sol-title { font-size: 0.68rem; font-weight: 700; color: var(--blue); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem; }
+  .sol-step { font-size: 0.87rem; color: #bfdbfe; margin-bottom: 3px; }
+  .sol-step .step-n { font-weight: 700; color: var(--blue); }
+  .sol-check {
+    font-size: 0.83rem; color: #86efac; font-style: italic;
+    margin-top: 4px; padding-top: 4px;
+    border-top: 1px dashed rgba(96,165,250,0.2);
+  }
+  .sol-final {
+    font-family: var(--mono); color: var(--green); font-size: 1rem; font-weight: 500;
+    margin-top: 0.5rem; padding-top: 0.5rem;
+    border-top: 1px solid rgba(96,165,250,0.2);
+  }
+
+  /* SELF-CHECK */
+  .check-area { display: flex; gap: 8px; margin-top: 0.75rem; flex-wrap: wrap; align-items: center; }
+  .check-ok {
+    background: var(--green-bg); border: 1px solid rgba(34,197,94,0.3);
+    color: var(--green); border-radius: var(--radius-sm);
+    padding: 0.38rem 1rem; font-family: var(--sans); font-size: 0.82rem;
+    font-weight: 600; cursor: pointer; transition: all 0.18s;
+  }
+  .check-ok:hover { border-color: var(--green); }
+  .check-ko {
+    background: var(--red-bg); border: 1px solid rgba(248,113,113,0.3);
+    color: var(--red); border-radius: var(--radius-sm);
+    padding: 0.38rem 1rem; font-family: var(--sans); font-size: 0.82rem;
+    font-weight: 600; cursor: pointer; transition: all 0.18s;
+  }
+  .check-ko:hover { border-color: var(--red); }
+  .result-badge {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 0.85rem; font-weight: 600; padding: 0.38rem 1rem;
+    border-radius: var(--radius-sm);
+  }
+  .result-badge.ok { background: var(--green-bg); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+  .result-badge.ko { background: var(--red-bg); color: var(--red); border: 1px solid rgba(248,113,113,0.3); }
+  .redo-btn {
+    background: none; border: none; color: var(--text3); font-family: var(--sans);
+    font-size: 0.75rem; cursor: pointer; padding: 0.2rem 0.5rem;
+    border-radius: 6px; transition: color 0.15s;
+  }
+  .redo-btn:hover { color: var(--text2); }
+
+  /* SECTIONS */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  @keyframes fadeIn { from { opacity:0; transform:translateY(-4px); } to { opacity:1; transform:translateY(0); } }
+
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
 </style>
 </head>
 <body>
@@ -293,7 +274,7 @@
     <div class="app-title">Pràctica d'Àlgebra</div>
     <div class="app-subtitle">3r ESO · Identitats · Polinomis · Equacions</div>
   </div>
-  <div class="progress-global" id="stars-global"></div>
+  <div class="stars-wrap" id="stars-global"></div>
 </header>
 
 <div class="container">
@@ -305,536 +286,262 @@
     <button class="reset-btn" onclick="resetAll()">↺ Reiniciar tot</button>
   </div>
 
-  <div class="tabs" role="tablist">
-    <button class="tab-btn active" onclick="showSection(0)" id="tab0">Identitats</button>
-    <button class="tab-btn" onclick="showSection(1)" id="tab1">Divisió polin.</button>
-    <button class="tab-btn" onclick="showSection(2)" id="tab2">Ruffini</button>
-    <button class="tab-btn" onclick="showSection(3)" id="tab3">Eq. 1r grau</button>
-    <button class="tab-btn" onclick="showSection(4)" id="tab4">Eq. 2n grau</button>
+  <div class="tabs" role="tablist" id="tabs-bar">
+    <button class="tab-btn active" onclick="showSection(0)" id="tab0"><span>Identitats</span><span class="tab-progress" id="prog0">0/5</span></button>
+    <button class="tab-btn" onclick="showSection(1)" id="tab1"><span>Divisió polin.</span><span class="tab-progress" id="prog1">0/5</span></button>
+    <button class="tab-btn" onclick="showSection(2)" id="tab2"><span>Ruffini</span><span class="tab-progress" id="prog2">0/5</span></button>
+    <button class="tab-btn" onclick="showSection(3)" id="tab3"><span>Eq. 1r grau</span><span class="tab-progress" id="prog3">0/5</span></button>
+    <button class="tab-btn" onclick="showSection(4)" id="tab4"><span>Eq. 2n grau</span><span class="tab-progress" id="prog4">0/5</span></button>
   </div>
 
-  <!-- ===== BLOC 1: IDENTITATS NOTABLES ===== -->
+  <!-- BLOC 1: IDENTITATS -->
   <div class="section active" id="section0">
     <div class="section-header">
       <div class="section-tag">Bloc 1</div>
       <div class="section-title">Identitats notables</div>
       <div class="section-desc">Desenvolupa o reconeix les tres identitats fonamentals en els dos sentits.</div>
     </div>
-    <div class="math-block">(a+b)² = a²+2ab+b²  ·  (a−b)² = a²−2ab+b²  ·  (a+b)(a−b) = a²−b²</div>
+    <div class="formula-ref">
+      <div class="formula-ref-title">Identitats de referència</div>
+      <div class="formula-list">
+        <div class="formula-row"><span class="f-label">I</span>(a+b)² = a² + 2ab + b²</div>
+        <div class="formula-row"><span class="f-label">II</span>(a−b)² = a² − 2ab + b²</div>
+        <div class="formula-row"><span class="f-label">III</span>(a+b)(a−b) = a² − b²</div>
+      </div>
+    </div>
     <div class="exercise-grid" id="ex-block0"></div>
   </div>
 
-  <!-- ===== BLOC 2: DIVISIÓ POLINOMIS ===== -->
+  <!-- BLOC 2: DIVISIÓ POLINOMIS -->
   <div class="section" id="section1">
     <div class="section-header">
       <div class="section-tag">Bloc 2</div>
       <div class="section-title">Divisió de polinomis</div>
       <div class="section-desc">Dividend de grau màxim 4, divisor de grau màxim 3. Calcula quocient i resta.</div>
     </div>
+    <div class="formula-ref">
+      <div class="formula-ref-title">Procediment</div>
+      <div class="formula-list">
+        <div class="formula-row"><span class="f-label">1</span>Divideix el 1r terme del dividend entre el 1r del divisor → terme del quocient</div>
+        <div class="formula-row"><span class="f-label">2</span>Multiplica el terme obtingut per tot el divisor</div>
+        <div class="formula-row"><span class="f-label">3</span>Resta del dividend actual → nou dividend. Repeteix fins que grau(resta) &lt; grau(divisor)</div>
+      </div>
+    </div>
     <div class="exercise-grid" id="ex-block1"></div>
   </div>
 
-  <!-- ===== BLOC 3: RUFFINI ===== -->
+  <!-- BLOC 3: RUFFINI -->
   <div class="section" id="section2">
     <div class="section-header">
       <div class="section-tag">Bloc 3</div>
       <div class="section-title">Regla de Ruffini</div>
       <div class="section-desc">Divideix polinomis de grau màxim 5 per un binomi de la forma (x − a).</div>
     </div>
+    <div class="formula-ref">
+      <div class="formula-ref-title">Esquema de Ruffini — exemple: (x³+2x+1) ÷ (x−2), a=2</div>
+      <div class="formula-list">
+        <div class="formula-row"><span class="f-label">Pas 1</span>Escriu els coeficients (inclou 0 si falta algun terme)</div>
+        <div class="formula-row"><span class="f-label">Pas 2</span>Baixa el primer coeficient. Multiplica per a, suma a la columna següent</div>
+        <div class="formula-row"><span class="f-label">Pas 3</span>Repeteix fins al final. L'últim número és la resta</div>
+      </div>
+    </div>
+    <div class="ruffini-scheme">  2  |  1   0   2   1
+     |      2   4  12
+     +—————————————————
+        1   2   6  <span style="color:var(--red)">13</span>  ← Q(x)=x²+2x+6, R=13</div>
     <div class="exercise-grid" id="ex-block2"></div>
   </div>
 
-  <!-- ===== BLOC 4: EQUACIONS 1r GRAU ===== -->
+  <!-- BLOC 4: EQUACIONS 1r GRAU -->
   <div class="section" id="section3">
     <div class="section-header">
       <div class="section-tag">Bloc 4</div>
       <div class="section-title">Equacions de 1r grau</div>
       <div class="section-desc">Amb com a màxim una distributiva, sense fraccions. Aïlla la incògnita pas a pas.</div>
     </div>
+    <div class="formula-ref">
+      <div class="formula-ref-title">Estratègia</div>
+      <div class="formula-list">
+        <div class="formula-row"><span class="f-label">1</span>Aplica la distributiva si hi ha parèntesis: a(b+c) = ab+ac</div>
+        <div class="formula-row"><span class="f-label">2</span>Agrupa termes amb x a un costat, nombres a l'altre</div>
+        <div class="formula-row"><span class="f-label">3</span>Divideix per el coeficient de x</div>
+        <div class="formula-row"><span class="f-label">4</span>Comprova: substitueix x a l'equació original</div>
+      </div>
+    </div>
     <div class="exercise-grid" id="ex-block3"></div>
   </div>
 
-  <!-- ===== BLOC 5: EQUACIONS 2n GRAU ===== -->
+  <!-- BLOC 5: EQUACIONS 2n GRAU -->
   <div class="section" id="section4">
     <div class="section-header">
       <div class="section-tag">Bloc 5</div>
       <div class="section-title">Equacions de 2n grau — Bhaskara</div>
       <div class="section-desc">Aplica la fórmula general. Casos amb dues solucions, solució doble o sense solució real.</div>
     </div>
-    <div class="math-block">x = (−b ± √(b²−4ac)) / 2a &nbsp;·&nbsp; D = b²−4ac</div>
+    <div class="formula-ref">
+      <div class="formula-ref-title">Fórmula de Bhaskara</div>
+      <div class="formula-list">
+        <div class="formula-row"><span class="f-label">Forma</span>ax² + bx + c = 0</div>
+        <hr class="formula-divider">
+        <div class="formula-row"><span class="f-label">x =</span>( −b ± √D ) / 2a</div>
+        <div class="formula-row"><span class="f-label">D =</span>b² − 4ac</div>
+        <hr class="formula-divider">
+        <div class="formula-row"><span class="f-label">D &gt; 0</span>dues solucions reals</div>
+        <div class="formula-row"><span class="f-label">D = 0</span>solució doble (x = −b/2a)</div>
+        <div class="formula-row"><span class="f-label">D &lt; 0</span>sense solució real</div>
+      </div>
+    </div>
     <div class="exercise-grid" id="ex-block4"></div>
   </div>
 
-</div><!-- /container -->
+</div>
 
 <script>
-// ============================================================
-// DATA
-// ============================================================
-
 const BLOCKS = [
-
   // BLOC 1 – Identitats notables
-  {
-    exercises: [
-      {
-        statement: "Desenvolupa la identitat notable:",
-        problem: "(x + 5)²",
-        hints: [
-          "És la identitat (a+b)² = a² + 2ab + b², on a = x i b = 5.",
-          "a² = x²,  2ab = 2·x·5 = 10x,  b² = 5² = 25.",
-          "Suma els tres termes: x² + 10x + 25."
-        ],
-        steps: [
-          "Identitat: (a+b)² = a² + 2·a·b + b²",
-          "a = x, b = 5",
-          "x² + 2·x·5 + 5²",
-          "= x² + 10x + 25"
-        ],
-        answer: "x² + 10x + 25"
-      },
-      {
-        statement: "Desenvolupa la identitat notable:",
-        problem: "(3x − 2)²",
-        hints: [
-          "És la identitat (a−b)² = a² − 2ab + b², on a = 3x i b = 2.",
-          "a² = (3x)² = 9x²,  2ab = 2·3x·2 = 12x,  b² = 4.",
-          "Amb el signe correcte: 9x² − 12x + 4."
-        ],
-        steps: [
-          "Identitat: (a−b)² = a² − 2·a·b + b²",
-          "a = 3x, b = 2",
-          "(3x)² − 2·3x·2 + 2²",
-          "= 9x² − 12x + 4"
-        ],
-        answer: "9x² − 12x + 4"
-      },
-      {
-        statement: "Factoritza reconeixent una identitat notable:",
-        problem: "x² − 16",
-        hints: [
-          "Pots escriure x² − 16 com x² − 4². Reconeixes alguna identitat?",
-          "És la identitat suma per diferència: a² − b² = (a+b)(a−b).",
-          "Aquí a = x i b = 4, per tant el resultat és (x+4)(x−4)."
-        ],
-        steps: [
-          "Escrivim 16 = 4², per tant x² − 4²",
-          "Identitat: a² − b² = (a+b)(a−b)",
-          "a = x, b = 4",
-          "= (x+4)(x−4)"
-        ],
-        answer: "(x + 4)(x − 4)"
-      },
-      {
-        statement: "Desenvolupa la identitat notable:",
-        problem: "(2x + 3)(2x − 3)",
-        hints: [
-          "Fixa't: és un producte de la forma (a+b)(a−b). Quina identitat és?",
-          "La identitat és (a+b)(a−b) = a² − b², on a = 2x i b = 3.",
-          "a² = 4x², b² = 9. Resultat: 4x² − 9."
-        ],
-        steps: [
-          "Identitat: (a+b)(a−b) = a² − b²",
-          "a = 2x, b = 3",
-          "(2x)² − 3²",
-          "= 4x² − 9"
-        ],
-        answer: "4x² − 9"
-      },
-      {
-        statement: "Factoritza reconeixent una identitat notable:",
-        problem: "x² + 6x + 9",
-        hints: [
-          "Comprova: √(x²) = x,  √9 = 3. El terme del mig és 2·x·3 = 6x? Sí!",
-          "És la identitat (a+b)² = a² + 2ab + b²  al revés.",
-          "a = x, b = 3 → resultat: (x + 3)²."
-        ],
-        steps: [
-          "Comprovem: a² = x², b² = 9 → b = 3",
-          "2ab = 2·x·3 = 6x ✓ coincideix!",
-          "Identitat inversa: a² + 2ab + b² = (a+b)²",
-          "= (x + 3)²"
-        ],
-        answer: "(x + 3)²"
-      }
-    ]
-  },
+  { exercises: [
+    { statement:"Desenvolupa:", problem:"(x + 5)²",
+      hints:["És la identitat I: (a+b)² = a²+2ab+b², on a=x i b=5.","a²=x², 2ab=2·x·5=10x, b²=25.","Suma els tres termes: x²+10x+25."],
+      steps:["Identitat I: (a+b)² = a²+2ab+b²","a=x, b=5","x² + 2·x·5 + 5²","= x² + 10x + 25"],
+      check:"Comprova: substituint a=x, b=5 → 10x=2·x·5 ✓  i  25=5² ✓",
+      answer:"x² + 10x + 25" },
+    { statement:"Desenvolupa:", problem:"(3x − 2)²",
+      hints:["És la identitat II: (a−b)²=a²−2ab+b², on a=3x i b=2.","a²=(3x)²=9x², 2ab=2·3x·2=12x, b²=4.","Resultat amb signe correcte: 9x²−12x+4."],
+      steps:["Identitat II: (a−b)²=a²−2ab+b²","a=3x, b=2","(3x)²−2·3x·2+2²","= 9x²−12x+4"],
+      check:"Comprova: 2ab=2·3x·2=12x ✓  i  el signe del terme central és − ✓",
+      answer:"9x² − 12x + 4" },
+    { statement:"Factoritza reconeixent una identitat:", problem:"x² − 16",
+      hints:["Escriu 16=4². Tens x²−4². Reconeixes alguna identitat?","Identitat III al revés: a²−b²=(a+b)(a−b).","a=x, b=4 → (x+4)(x−4)."],
+      steps:["Escrivim: x²−4²","Identitat III: a²−b²=(a+b)(a−b)","a=x, b=4","= (x+4)(x−4)"],
+      check:"Comprova: (x+4)(x−4)=x²−16 ✓ (identitat III directa)",
+      answer:"(x + 4)(x − 4)" },
+    { statement:"Desenvolupa:", problem:"(2x + 3)(2x − 3)",
+      hints:["És un producte (a+b)(a−b). Quina identitat és?","Identitat III: (a+b)(a−b)=a²−b², amb a=2x i b=3.","a²=4x², b²=9 → 4x²−9."],
+      steps:["Identitat III: (a+b)(a−b)=a²−b²","a=2x, b=3","(2x)²−3²","= 4x²−9"],
+      check:"Comprova: és suma per diferència, resultat sense terme central ✓",
+      answer:"4x² − 9" },
+    { statement:"Factoritza reconeixent una identitat:", problem:"x² + 6x + 9",
+      hints:["√(x²)=x, √9=3. El terme central hauria de ser 2·x·3=6x. És 6x? Sí!","Identitat I al revés: a²+2ab+b²=(a+b)².","a=x, b=3 → (x+3)²."],
+      steps:["Comprovem: a²=x², b²=9 → b=3","2ab=2·x·3=6x ✓ coincideix!","Identitat I inversa: (a+b)²","= (x+3)²"],
+      check:"Comprova: (x+3)²=x²+6x+9 ✓",
+      answer:"(x + 3)²" }
+  ]},
 
   // BLOC 2 – Divisió de polinomis
-  {
-    exercises: [
-      {
-        statement: "Efectua la divisió de polinomis:",
-        problem: "(x³ + 2x² − x − 2) ÷ (x + 1)",
-        hints: [
-          "Divideix el primer terme del dividend (x³) entre el primer terme del divisor (x). Obtens x².",
-          "Multiplica x²·(x+1) = x³+x² i resta del dividend. El nou dividend és x²−x−2.",
-          "Torna a dividir: x²÷x = x. Multiplica x·(x+1) = x²+x i resta: obtens −2x−2.",
-          "Finalment: −2x÷x = −2. Multiplica −2·(x+1) = −2x−2. Resta = 0."
-        ],
-        steps: [
-          "x³ ÷ x = x²  →  multiplica x²(x+1) = x³+x²",
-          "Resta: (x³+2x²−x−2) − (x³+x²) = x²−x−2",
-          "x² ÷ x = x  →  multiplica x(x+1) = x²+x",
-          "Resta: (x²−x−2) − (x²+x) = −2x−2",
-          "−2x ÷ x = −2  →  multiplica −2(x+1) = −2x−2",
-          "Resta = 0"
-        ],
-        answer: "Q(x) = x² + x − 2,  R = 0"
-      },
-      {
-        statement: "Efectua la divisió de polinomis:",
-        problem: "(2x³ − 3x² + 4x − 1) ÷ (x − 1)",
-        hints: [
-          "Divideix 2x³ ÷ x = 2x². Multiplica 2x²(x−1) = 2x³−2x². Resta del dividend.",
-          "Nou dividend: −x²+4x−1. Divideix −x²÷x = −x. Multiplica −x(x−1) = −x²+x.",
-          "Resta: 3x−1. Divideix 3x÷x = 3. Multiplica 3(x−1) = 3x−3. Resta = 2."
-        ],
-        steps: [
-          "2x³ ÷ x = 2x²  →  2x²(x−1) = 2x³−2x²",
-          "Resta: −x²+4x−1",
-          "−x² ÷ x = −x  →  −x(x−1) = −x²+x",
-          "Resta: 3x−1",
-          "3x ÷ x = 3  →  3(x−1) = 3x−3",
-          "Resta = 2"
-        ],
-        answer: "Q(x) = 2x² − x + 3,  R = 2"
-      },
-      {
-        statement: "Efectua la divisió de polinomis:",
-        problem: "(x⁴ − 1) ÷ (x² + 1)",
-        hints: [
-          "El dividend és x⁴ + 0·x² − 1 (cal posar coeficients 0 pels termes que falten).",
-          "Divideix x⁴ ÷ x² = x². Multiplica x²(x²+1) = x⁴+x². Resta: −x²−1.",
-          "Divideix −x² ÷ x² = −1. Multiplica −1(x²+1) = −x²−1. Resta = 0."
-        ],
-        steps: [
-          "Dividend: x⁴ + 0x² − 1",
-          "x⁴ ÷ x² = x²  →  x²(x²+1) = x⁴+x²",
-          "Resta: −x²−1",
-          "−x² ÷ x² = −1  →  −1(x²+1) = −x²−1",
-          "Resta = 0"
-        ],
-        answer: "Q(x) = x² − 1,  R = 0"
-      },
-      {
-        statement: "Efectua la divisió de polinomis:",
-        problem: "(3x³ + x² − 2x + 5) ÷ (x² − x + 1)",
-        hints: [
-          "Divideix 3x³ ÷ x² = 3x. Multiplica 3x(x²−x+1) = 3x³−3x²+3x. Resta del dividend.",
-          "Resta: 4x²−5x+5. Divideix 4x²÷x² = 4. Multiplica 4(x²−x+1) = 4x²−4x+4.",
-          "Resta final: −x+1. El grau de la resta (1) < grau divisor (2), aturem."
-        ],
-        steps: [
-          "3x³ ÷ x² = 3x  →  3x(x²−x+1) = 3x³−3x²+3x",
-          "Resta: 4x²−5x+5",
-          "4x² ÷ x² = 4  →  4(x²−x+1) = 4x²−4x+4",
-          "Resta: −x+1 (grau 1 < grau 2, aturem)"
-        ],
-        answer: "Q(x) = 3x + 4,  R(x) = −x + 1"
-      },
-      {
-        statement: "Efectua la divisió de polinomis:",
-        problem: "(x⁴ + 2x³ − x + 3) ÷ (x² + x − 2)",
-        hints: [
-          "Dividend complet: x⁴ + 2x³ + 0x² − x + 3. Divideix x⁴ ÷ x² = x².",
-          "Multiplica x²(x²+x−2) = x⁴+x³−2x². Resta: x³+2x²−x+3.",
-          "Divideix x³ ÷ x² = x. Multiplica x(x²+x−2) = x³+x²−2x. Resta: x²+x+3.",
-          "Divideix x² ÷ x² = 1. Multiplica 1·(x²+x−2) = x²+x−2. Resta = 5."
-        ],
-        steps: [
-          "x⁴ ÷ x² = x²  →  x²(x²+x−2) = x⁴+x³−2x²",
-          "Resta: x³+2x²−x+3",
-          "x³ ÷ x² = x  →  x(x²+x−2) = x³+x²−2x",
-          "Resta: x²+x+3",
-          "x² ÷ x² = 1  →  1·(x²+x−2) = x²+x−2",
-          "Resta = 5"
-        ],
-        answer: "Q(x) = x² + x + 1,  R = 5"
-      }
-    ]
-  },
+  { exercises: [
+    { statement:"Efectua la divisió:", problem:"(x³+2x²−x−2) ÷ (x+1)",
+      hints:["x³÷x=x². Multiplica x²·(x+1)=x³+x². Resta del dividend.","Nou dividend: x²−x−2. Divideix x²÷x=x. Multiplica x(x+1)=x²+x.","Resta: −2x−2. Divideix −2x÷x=−2. Multiplica −2(x+1)=−2x−2. Resta=0."],
+      steps:["x³÷x=x² → x²(x+1)=x³+x²","Resta: x²−x−2","x²÷x=x → x(x+1)=x²+x","Resta: −2x−2","−2x÷x=−2 → −2(x+1)=−2x−2","Resta=0"],
+      check:"Comprova: (x²+x−2)(x+1) = x³+2x²−x−2 ✓",
+      answer:"Q(x) = x²+x−2,  R = 0" },
+    { statement:"Efectua la divisió:", problem:"(2x³−3x²+4x−1) ÷ (x−1)",
+      hints:["2x³÷x=2x². Multiplica 2x²(x−1)=2x³−2x². Resta del dividend.","Nou dividend: −x²+4x−1. Divideix −x²÷x=−x.","Resta: 3x−1. Divideix 3x÷x=3. Multiplica 3(x−1)=3x−3. Resta=2."],
+      steps:["2x³÷x=2x² → 2x²(x−1)=2x³−2x²","Resta: −x²+4x−1","−x²÷x=−x → −x(x−1)=−x²+x","Resta: 3x−1","3x÷x=3 → 3(x−1)=3x−3","Resta=2"],
+      check:"Comprova: (2x²−x+3)(x−1)+2 = 2x³−3x²+4x−1 ✓",
+      answer:"Q(x) = 2x²−x+3,  R = 2" },
+    { statement:"Efectua la divisió:", problem:"(x⁴−1) ÷ (x²+1)",
+      hints:["Escriu el dividend com x⁴+0x²−1 (el terme x² falta, posa coeficient 0).","x⁴÷x²=x². Multiplica x²(x²+1)=x⁴+x². Resta: −x²−1.","−x²÷x²=−1. Multiplica −1(x²+1)=−x²−1. Resta=0."],
+      steps:["Dividend: x⁴+0x²−1","x⁴÷x²=x² → x²(x²+1)=x⁴+x²","Resta: −x²−1","−x²÷x²=−1 → −1(x²+1)=−x²−1","Resta=0"],
+      check:"Comprova: (x²−1)(x²+1)=x⁴−1 ✓ (identitat III!)",
+      answer:"Q(x) = x²−1,  R = 0" },
+    { statement:"Efectua la divisió:", problem:"(3x³+x²−2x+5) ÷ (x²−x+1)",
+      hints:["3x³÷x²=3x. Multiplica 3x(x²−x+1)=3x³−3x²+3x. Resta del dividend.","Resta: 4x²−5x+5. Divideix 4x²÷x²=4.","Multiplica 4(x²−x+1)=4x²−4x+4. Resta: −x+1. Grau(resta)=1 < 2, aturem."],
+      steps:["3x³÷x²=3x → 3x(x²−x+1)=3x³−3x²+3x","Resta: 4x²−5x+5","4x²÷x²=4 → 4(x²−x+1)=4x²−4x+4","Resta: −x+1  (grau 1 < grau 2 → aturem)"],
+      check:"Comprova: (3x+4)(x²−x+1)+(−x+1) = 3x³+x²−2x+5 ✓",
+      answer:"Q(x) = 3x+4,  R(x) = −x+1" },
+    { statement:"Efectua la divisió:", problem:"(x⁴+2x³−x+3) ÷ (x²+x−2)",
+      hints:["Dividend complet: x⁴+2x³+0x²−x+3. Divideix x⁴÷x²=x².","Multiplica x²(x²+x−2)=x⁴+x³−2x². Resta: x³+2x²−x+3.","x³÷x²=x. Multiplica x(x²+x−2)=x³+x²−2x. Resta: x²+x+3. Continua!"],
+      steps:["x⁴÷x²=x² → x²(x²+x−2)=x⁴+x³−2x²","Resta: x³+2x²−x+3","x³÷x²=x → x(x²+x−2)=x³+x²−2x","Resta: x²+x+3","x²÷x²=1 → 1·(x²+x−2)=x²+x−2","Resta=5"],
+      check:"Comprova: (x²+x+1)(x²+x−2)+5 = x⁴+2x³−x+3 ✓",
+      answer:"Q(x) = x²+x+1,  R = 5" }
+  ]},
 
   // BLOC 3 – Ruffini
-  {
-    exercises: [
-      {
-        statement: "Aplica la regla de Ruffini per dividir:",
-        problem: "(x³ − 3x² + 3x − 1) ÷ (x − 1)",
-        hints: [
-          "En Ruffini, el 'divisor' és el valor a tal que x−a = 0, per tant a = 1.",
-          "Coeficients del dividend: 1, −3, 3, −1. Baixa el primer: 1.",
-          "Multiplica 1·1 = 1; suma amb −3: obté −2. Multiplica −2·1 = −2; suma amb 3: obté 1. Multiplica 1·1 = 1; suma amb −1: obté 0 (resta).",
-          "El quocient té coeficients 1, −2, 1 → x² − 2x + 1, Resta = 0."
-        ],
-        steps: [
-          "a = 1, coeficients: [1, −3, 3, −1]",
-          "↓ 1  →  1",
-          "1×1=1;  −3+1=−2",
-          "−2×1=−2;  3+(−2)=1",
-          "1×1=1;  −1+1=0  (resta = 0)",
-          "Quocient: [1, −2, 1] = x² − 2x + 1"
-        ],
-        answer: "Q(x) = x² − 2x + 1,  R = 0"
-      },
-      {
-        statement: "Aplica la regla de Ruffini per dividir:",
-        problem: "(x⁴ − 5x² + 4) ÷ (x + 2)",
-        hints: [
-          "El divisor és (x+2), per tant a = −2. Coeficients: 1, 0, −5, 0, 4 (els coeficients nuls s'han d'incloure!).",
-          "Baixa el 1. Multiplica 1·(−2) = −2; suma amb 0: −2.",
-          "Continua: −2·(−2) = 4; 4+(−5) = −1. Després: −1·(−2) = 2; 2+0 = 2. Finalment: 2·(−2) = −4; 4+(−4) = 0."
-        ],
-        steps: [
-          "a = −2, coeficients: [1, 0, −5, 0, 4]",
-          "↓ 1",
-          "1×(−2)=−2;  0+(−2)=−2",
-          "−2×(−2)=4;  −5+4=−1",
-          "−1×(−2)=2;  0+2=2",
-          "2×(−2)=−4;  4+(−4)=0  (resta=0)",
-          "Quocient: [1, −2, −1, 2] = x³ − 2x² − x + 2"
-        ],
-        answer: "Q(x) = x³ − 2x² − x + 2,  R = 0"
-      },
-      {
-        statement: "Aplica la regla de Ruffini per dividir:",
-        problem: "(2x³ + x² − 5x + 2) ÷ (x − 2)",
-        hints: [
-          "a = 2 (perquè x−2=0 quan x=2). Coeficients: 2, 1, −5, 2.",
-          "Baixa el 2. Multiplica 2·2 = 4; suma amb 1: 5.",
-          "5·2 = 10; −5+10 = 5. Finalment 5·2 = 10; 2+10 = 12."
-        ],
-        steps: [
-          "a = 2, coeficients: [2, 1, −5, 2]",
-          "↓ 2",
-          "2×2=4;  1+4=5",
-          "5×2=10;  −5+10=5",
-          "5×2=10;  2+10=12  (resta=12)",
-          "Quocient: [2, 5, 5] = 2x² + 5x + 5"
-        ],
-        answer: "Q(x) = 2x² + 5x + 5,  R = 12"
-      },
-      {
-        statement: "Aplica la regla de Ruffini per dividir:",
-        problem: "(x⁵ − x⁴ − x + 1) ÷ (x − 1)",
-        hints: [
-          "a = 1. Coeficients: 1, −1, 0, 0, −1, 1 (ull! grau 5, tots els termes).",
-          "Baixa el 1. Multiplica per 1 i suma successivament.",
-          "Seqüència: 1 → 0 → 0 → 0 → −1 → 0. Resta = 0."
-        ],
-        steps: [
-          "a = 1, coeficients: [1, −1, 0, 0, −1, 1]",
-          "1×1=1;  −1+1=0",
-          "0×1=0;  0+0=0",
-          "0×1=0;  0+0=0",
-          "0×1=0;  −1+0=−1",
-          "−1×1=−1;  1+(−1)=0  (resta=0)",
-          "Quocient: [1, 0, 0, 0, −1] = x⁴ − 1"
-        ],
-        answer: "Q(x) = x⁴ − 1,  R = 0"
-      },
-      {
-        statement: "Aplica la regla de Ruffini per dividir:",
-        problem: "(3x⁴ − 2x³ + x − 5) ÷ (x + 1)",
-        hints: [
-          "a = −1. Coeficients: 3, −2, 0, 1, −5.",
-          "Baixa el 3. Multiplica 3·(−1) = −3; −2+(−3) = −5.",
-          "−5·(−1) = 5; 0+5 = 5. Després: 5·(−1) = −5; 1+(−5) = −4. Finalment: −4·(−1) = 4; −5+4 = −1."
-        ],
-        steps: [
-          "a = −1, coeficients: [3, −2, 0, 1, −5]",
-          "↓ 3",
-          "3×(−1)=−3;  −2+(−3)=−5",
-          "−5×(−1)=5;  0+5=5",
-          "5×(−1)=−5;  1+(−5)=−4",
-          "−4×(−1)=4;  −5+4=−1  (resta=−1)",
-          "Quocient: [3, −5, 5, −4] = 3x³ − 5x² + 5x − 4"
-        ],
-        answer: "Q(x) = 3x³ − 5x² + 5x − 4,  R = −1"
-      }
-    ]
-  },
+  { exercises: [
+    { statement:"Aplica Ruffini:", problem:"(x³−3x²+3x−1) ÷ (x−1)",
+      hints:["a=1 (perquè x−1=0 quan x=1). Coeficients: 1, −3, 3, −1.","Baixa el 1. Multiplica 1·1=1; −3+1=−2. Continua multiplicant per 1.","Seqüència: 1→−2→1→0. Resta=0. Quocient: 1, −2, 1."],
+      steps:["a=1, coeficients: [1, −3, 3, −1]","↓ 1","1×1=1 → −3+1=−2","−2×1=−2 → 3+(−2)=1","1×1=1 → −1+1=0 (resta=0)","Quocient: [1, −2, 1]"],
+      check:"Comprova: (x²−2x+1)(x−1) = x³−3x²+3x−1 ✓ (és (x−1)³!)",
+      answer:"Q(x) = x²−2x+1,  R = 0" },
+    { statement:"Aplica Ruffini:", problem:"(x⁴−5x²+4) ÷ (x+2)",
+      hints:["a=−2. Coeficients: 1, 0, −5, 0, 4. ⚠ El terme x³ falta, posa 0!","Baixa 1. Multiplica 1·(−2)=−2; 0+(−2)=−2.","Continua: −2·(−2)=4; −5+4=−1 → −1·(−2)=2; 0+2=2 → 2·(−2)=−4; 4+(−4)=0."],
+      steps:["a=−2, coeficients: [1, 0, −5, 0, 4]","↓ 1","1×(−2)=−2 → 0+(−2)=−2","−2×(−2)=4 → −5+4=−1","−1×(−2)=2 → 0+2=2","2×(−2)=−4 → 4+(−4)=0 (resta=0)","Quocient: [1, −2, −1, 2]"],
+      check:"Comprova: (x³−2x²−x+2)(x+2) = x⁴−5x²+4 ✓",
+      answer:"Q(x) = x³−2x²−x+2,  R = 0" },
+    { statement:"Aplica Ruffini:", problem:"(2x³+x²−5x+2) ÷ (x−2)",
+      hints:["a=2. Coeficients: 2, 1, −5, 2.","Baixa 2. Multiplica 2·2=4; 1+4=5.","5·2=10; −5+10=5. Finalment: 5·2=10; 2+10=12. Resta=12."],
+      steps:["a=2, coeficients: [2, 1, −5, 2]","↓ 2","2×2=4 → 1+4=5","5×2=10 → −5+10=5","5×2=10 → 2+10=12 (resta=12)","Quocient: [2, 5, 5]"],
+      check:"Comprova: (2x²+5x+5)(x−2)+12 = 2x³+x²−5x+2 ✓",
+      answer:"Q(x) = 2x²+5x+5,  R = 12" },
+    { statement:"Aplica Ruffini:", problem:"(x⁵−x⁴−x+1) ÷ (x−1)",
+      hints:["a=1. Coeficients: 1, −1, 0, 0, −1, 1. ⚠ Manquen x³ i x², posa dos zeros!","Baixa 1. Multiplica sempre per 1 (a=1), per tant cada suma és directa.","Seqüència: 1→0→0→0→−1→0. Resta=0."],
+      steps:["a=1, coeficients: [1, −1, 0, 0, −1, 1]","↓ 1","1×1=1 → −1+1=0","0×1=0 → 0+0=0","0×1=0 → 0+0=0","0×1=0 → −1+0=−1","−1×1=−1 → 1+(−1)=0 (resta=0)","Quocient: [1, 0, 0, 0, −1]"],
+      check:"Comprova: (x⁴−1)(x−1) = x⁵−x⁴−x+1 ✓",
+      answer:"Q(x) = x⁴−1,  R = 0" },
+    { statement:"Aplica Ruffini:", problem:"(3x⁴−2x³+x−5) ÷ (x+1)",
+      hints:["a=−1. Coeficients: 3, −2, 0, 1, −5. ⚠ Falta x², posa 0!","Baixa 3. Multiplica 3·(−1)=−3; −2+(−3)=−5.","Continua: −5·(−1)=5; 0+5=5 → 5·(−1)=−5; 1+(−5)=−4 → −4·(−1)=4; −5+4=−1."],
+      steps:["a=−1, coeficients: [3, −2, 0, 1, −5]","↓ 3","3×(−1)=−3 → −2+(−3)=−5","−5×(−1)=5 → 0+5=5","5×(−1)=−5 → 1+(−5)=−4","−4×(−1)=4 → −5+4=−1 (resta=−1)","Quocient: [3, −5, 5, −4]"],
+      check:"Comprova: (3x³−5x²+5x−4)(x+1)+(−1) = 3x⁴−2x³+x−5 ✓",
+      answer:"Q(x) = 3x³−5x²+5x−4,  R = −1" }
+  ]},
 
   // BLOC 4 – Equacions 1r grau
-  {
-    exercises: [
-      {
-        statement: "Resol l'equació de primer grau:",
-        problem: "3(x + 4) = 2x + 17",
-        hints: [
-          "Aplica la distributiva al membre esquerre: 3·x + 3·4.",
-          "Obtens 3x + 12 = 2x + 17. Passa el 2x a l'esquerra.",
-          "3x − 2x + 12 = 17 → x + 12 = 17. Aïlla la x."
-        ],
-        steps: [
-          "Distributiva: 3x + 12 = 2x + 17",
-          "Passem 2x: 3x − 2x + 12 = 17",
-          "x + 12 = 17",
-          "x = 17 − 12 = 5"
-        ],
-        answer: "x = 5"
-      },
-      {
-        statement: "Resol l'equació de primer grau:",
-        problem: "5x − 3 = 2(x + 6)",
-        hints: [
-          "Aplica la distributiva al membre dret: 2·x + 2·6.",
-          "5x − 3 = 2x + 12. Passa el 2x a l'esquerra.",
-          "3x = 15. Divideix per 3."
-        ],
-        steps: [
-          "Distributiva: 5x − 3 = 2x + 12",
-          "Passem 2x: 3x − 3 = 12",
-          "3x = 15",
-          "x = 5"
-        ],
-        answer: "x = 5"
-      },
-      {
-        statement: "Resol l'equació de primer grau:",
-        problem: "4(2x − 1) − 3x = x + 8",
-        hints: [
-          "Distributiva: 4·2x − 4·1 − 3x = x + 8 → 8x − 4 − 3x = x + 8.",
-          "Agrupa termes amb x a l'esquerre: 5x − 4 = x + 8.",
-          "Passa la x: 4x = 12. Divideix per 4."
-        ],
-        steps: [
-          "Distributiva: 8x − 4 − 3x = x + 8",
-          "Simplifica: 5x − 4 = x + 8",
-          "Passem x: 4x = 12",
-          "x = 3"
-        ],
-        answer: "x = 3"
-      },
-      {
-        statement: "Resol l'equació de primer grau:",
-        problem: "2(3x + 5) = 4x − 2",
-        hints: [
-          "Distributiva: 6x + 10 = 4x − 2.",
-          "Passa el 4x a l'esquerra: 2x + 10 = −2.",
-          "Aïlla: 2x = −12. Divideix per 2."
-        ],
-        steps: [
-          "Distributiva: 6x + 10 = 4x − 2",
-          "Passem 4x: 2x + 10 = −2",
-          "2x = −12",
-          "x = −6"
-        ],
-        answer: "x = −6"
-      },
-      {
-        statement: "Resol l'equació de primer grau:",
-        problem: "7x − 2(x − 3) = 3x + 14",
-        hints: [
-          "Distributiva del membre esquerre: 7x − 2x + 6 = 3x + 14.",
-          "Simplifica: 5x + 6 = 3x + 14.",
-          "Passa el 3x: 2x = 8. Divideix per 2."
-        ],
-        steps: [
-          "Distributiva: 7x − 2x + 6 = 3x + 14",
-          "Simplifica: 5x + 6 = 3x + 14",
-          "Passem 3x: 2x = 8",
-          "x = 4"
-        ],
-        answer: "x = 4"
-      }
-    ]
-  },
+  { exercises: [
+    { statement:"Resol l'equació:", problem:"3(x+4) = 2x+17",
+      hints:["Aplica la distributiva: 3·x+3·4=3x+12.","3x+12=2x+17. Passa el 2x a l'esquerra restant.","x+12=17. Aïlla la x."],
+      steps:["Distributiva: 3x+12=2x+17","Passem 2x: 3x−2x+12=17","x+12=17","x=17−12=5"],
+      check:"Comprova: 3(5+4)=3·9=27 = 2·5+17=27 ✓",
+      answer:"x = 5" },
+    { statement:"Resol l'equació:", problem:"5x−3 = 2(x+6)",
+      hints:["Aplica la distributiva al membre dret: 2x+12.","5x−3=2x+12. Passa el 2x a l'esquerra.","3x=15. Divideix per 3."],
+      steps:["Distributiva: 5x−3=2x+12","Passem 2x: 3x−3=12","3x=15","x=5"],
+      check:"Comprova: 5·5−3=22 = 2(5+6)=22 ✓",
+      answer:"x = 5" },
+    { statement:"Resol l'equació:", problem:"4(2x−1)−3x = x+8",
+      hints:["Distributiva: 8x−4−3x=x+8.","Simplifica el membre esquerre: 5x−4=x+8.","Passa la x: 4x=12. Divideix per 4."],
+      steps:["Distributiva: 8x−4−3x=x+8","Simplifica: 5x−4=x+8","Passem x: 4x=12","x=3"],
+      check:"Comprova: 4(6−1)−9=11 = 3+8=11 ✓",
+      answer:"x = 3" },
+    { statement:"Resol l'equació:", problem:"2(3x+5) = 4x−2",
+      hints:["Distributiva: 6x+10=4x−2.","Passa el 4x: 2x+10=−2.","2x=−12. Divideix per 2."],
+      steps:["Distributiva: 6x+10=4x−2","Passem 4x: 2x+10=−2","2x=−12","x=−6"],
+      check:"Comprova: 2(−18+5)=−26 = 4·(−6)−2=−26 ✓",
+      answer:"x = −6" },
+    { statement:"Resol l'equació:", problem:"7x−2(x−3) = 3x+14",
+      hints:["Distributiva del membre esquerre: 7x−2x+6=3x+14.","Simplifica: 5x+6=3x+14.","Passa el 3x: 2x=8. Divideix per 2."],
+      steps:["Distributiva: 7x−2x+6=3x+14","Simplifica: 5x+6=3x+14","Passem 3x: 2x=8","x=4"],
+      check:"Comprova: 7·4−2(4−3)=28−2=26 = 3·4+14=26 ✓",
+      answer:"x = 4" }
+  ]},
 
   // BLOC 5 – Equacions 2n grau
-  {
-    exercises: [
-      {
-        statement: "Resol amb la fórmula de Bhaskara (dues solucions):",
-        problem: "x² − 5x + 6 = 0",
-        hints: [
-          "Identifica: a = 1, b = −5, c = 6.",
-          "Calcula el discriminant: D = b² − 4ac = 25 − 24 = 1. Com D > 0, hi ha dues solucions.",
-          "x = (5 ± √1) / 2 = (5 ± 1) / 2.",
-          "x₁ = 6/2 = 3,  x₂ = 4/2 = 2."
-        ],
-        steps: [
-          "a = 1, b = −5, c = 6",
-          "D = (−5)² − 4·1·6 = 25 − 24 = 1",
-          "√D = 1",
-          "x = (5 ± 1) / 2",
-          "x₁ = 6/2 = 3",
-          "x₂ = 4/2 = 2"
-        ],
-        answer: "x₁ = 3,  x₂ = 2"
-      },
-      {
-        statement: "Resol amb la fórmula de Bhaskara (dues solucions):",
-        problem: "2x² + x − 6 = 0",
-        hints: [
-          "a = 2, b = 1, c = −6.",
-          "D = 1² − 4·2·(−6) = 1 + 48 = 49. Com D > 0, dues solucions.",
-          "x = (−1 ± 7) / 4.",
-          "x₁ = 6/4 = 3/2,  x₂ = −8/4 = −2."
-        ],
-        steps: [
-          "a = 2, b = 1, c = −6",
-          "D = 1 − 4·2·(−6) = 1 + 48 = 49",
-          "√D = 7",
-          "x = (−1 ± 7) / 4",
-          "x₁ = (−1+7)/4 = 6/4 = 3/2",
-          "x₂ = (−1−7)/4 = −8/4 = −2"
-        ],
-        answer: "x₁ = 3/2,  x₂ = −2"
-      },
-      {
-        statement: "Resol amb la fórmula de Bhaskara (solució doble):",
-        problem: "x² − 6x + 9 = 0",
-        hints: [
-          "a = 1, b = −6, c = 9.",
-          "D = 36 − 36 = 0. Quan D = 0, hi ha una única solució (doble).",
-          "x = 6 / (2·1) = 3. Comprova: és (x−3)² = 0."
-        ],
-        steps: [
-          "a = 1, b = −6, c = 9",
-          "D = (−6)² − 4·1·9 = 36 − 36 = 0",
-          "√D = 0 → solució doble",
-          "x = 6 / (2·1) = 3"
-        ],
-        answer: "x = 3 (solució doble)"
-      },
-      {
-        statement: "Resol amb la fórmula de Bhaskara (sense solució real):",
-        problem: "x² + 2x + 5 = 0",
-        hints: [
-          "a = 1, b = 2, c = 5.",
-          "D = 4 − 20 = −16. Quan D < 0, no hi ha solució real.",
-          "No podem calcular l'arrel d'un número negatiu en els reals."
-        ],
-        steps: [
-          "a = 1, b = 2, c = 5",
-          "D = 2² − 4·1·5 = 4 − 20 = −16",
-          "D < 0 → no existeix arrel real",
-          "Sense solució real"
-        ],
-        answer: "Sense solució real (D = −16 < 0)"
-      },
-      {
-        statement: "Resol amb la fórmula de Bhaskara (dues solucions):",
-        problem: "3x² − 7x − 6 = 0",
-        hints: [
-          "a = 3, b = −7, c = −6.",
-          "D = 49 + 72 = 121. √121 = 11. Dues solucions!",
-          "x = (7 ± 11) / 6.",
-          "x₁ = 18/6 = 3,  x₂ = −4/6 = −2/3."
-        ],
-        steps: [
-          "a = 3, b = −7, c = −6",
-          "D = (−7)² − 4·3·(−6) = 49 + 72 = 121",
-          "√D = 11",
-          "x = (7 ± 11) / 6",
-          "x₁ = (7+11)/6 = 18/6 = 3",
-          "x₂ = (7−11)/6 = −4/6 = −2/3"
-        ],
-        answer: "x₁ = 3,  x₂ = −2/3"
-      }
-    ]
-  }
+  { exercises: [
+    { statement:"Resol amb Bhaskara (D>0):", problem:"x²−5x+6=0",
+      hints:["a=1, b=−5, c=6.","D=(−5)²−4·1·6=25−24=1. D>0 → dues solucions.","x=(5±√1)/2=(5±1)/2 → x₁=3, x₂=2."],
+      steps:["a=1, b=−5, c=6","D=(−5)²−4·1·6=25−24=1","√D=1","x=(5±1)/2","x₁=6/2=3","x₂=4/2=2"],
+      check:"Comprova: 3²−5·3+6=0 ✓  i  2²−5·2+6=0 ✓",
+      answer:"x₁=3,  x₂=2" },
+    { statement:"Resol amb Bhaskara (D>0):", problem:"2x²+x−6=0",
+      hints:["a=2, b=1, c=−6.","D=1²−4·2·(−6)=1+48=49. √49=7.","x=(−1±7)/4 → x₁=6/4=3/2, x₂=−8/4=−2."],
+      steps:["a=2, b=1, c=−6","D=1−4·2·(−6)=49","√D=7","x=(−1±7)/4","x₁=(−1+7)/4=6/4=3/2","x₂=(−1−7)/4=−8/4=−2"],
+      check:"Comprova: 2·(3/2)²+(3/2)−6=0 ✓  i  2·4+(−2)−6=0 ✓",
+      answer:"x₁=3/2,  x₂=−2" },
+    { statement:"Resol amb Bhaskara (D=0):", problem:"x²−6x+9=0",
+      hints:["a=1, b=−6, c=9.","D=36−36=0. D=0 → solució doble!","x=−b/2a=6/2=3."],
+      steps:["a=1, b=−6, c=9","D=(−6)²−4·1·9=36−36=0","√D=0 → solució doble","x=6/(2·1)=3"],
+      check:"Comprova: 3²−6·3+9=9−18+9=0 ✓  (és (x−3)²=0!)",
+      answer:"x=3 (solució doble)" },
+    { statement:"Resol amb Bhaskara (D<0):", problem:"x²+2x+5=0",
+      hints:["a=1, b=2, c=5.","D=4−20=−16. D<0 → no hi ha solució real!","No podem calcular l'arrel d'un nombre negatiu en els reals."],
+      steps:["a=1, b=2, c=5","D=2²−4·1·5=4−20=−16","D<0 → no existeix arrel real","Sense solució real"],
+      check:"D=−16<0 confirma que la paràbola no talla l'eix x.",
+      answer:"Sense solució real (D=−16)" },
+    { statement:"Resol amb Bhaskara (D>0):", problem:"3x²−7x−6=0",
+      hints:["a=3, b=−7, c=−6.","D=49−4·3·(−6)=49+72=121. √121=11.","x=(7±11)/6 → x₁=18/6=3, x₂=−4/6=−2/3."],
+      steps:["a=3, b=−7, c=−6","D=(−7)²−4·3·(−6)=49+72=121","√D=11","x=(7±11)/6","x₁=(7+11)/6=18/6=3","x₂=(7−11)/6=−4/6=−2/3"],
+      check:"Comprova: 3·9−7·3−6=27−21−6=0 ✓  i  3·(4/9)−7·(−2/3)−6=0 ✓",
+      answer:"x₁=3,  x₂=−2/3" }
+  ]}
 ];
 
 // ============================================================
@@ -843,7 +550,8 @@ const BLOCKS = [
 const state = {
   results: {},
   hintsShown: {},
-  solShown: {}
+  solShown: {},
+  activeSection: 0
 };
 
 function key(b, e) { return `${b}-${e}`; }
@@ -860,17 +568,45 @@ function renderAll() {
     });
   });
   updateScores();
+  updateTabProgress();
   renderStars();
 }
 
 function renderExercise(bi, ei, ex) {
   const k = key(bi, ei);
   const res = state.results[k];
+  const hintsN = state.hintsShown[k] || 0;
+  const totalHints = ex.hints.length;
+  const numLabel = `${['A','B','C','D','E'][bi]}${ei+1}`;
+
   const card = document.createElement('div');
   card.className = 'ex-card' + (res === 'ok' ? ' solved' : res === 'ko' ? ' wrong' : '');
   card.id = `card-${k}`;
 
-  const numLabel = `${['A','B','C','D','E'][bi]}${ei+1}`;
+  // Hint button label
+  const hintLabel = hintsN >= totalHints
+    ? `<span style="color:var(--text3)">— No hi ha més pistes</span>`
+    : `💡 Vull una pista ${hintsN > 0 ? `(${hintsN}/${totalHints})` : ''}`;
+  const hintDisabled = hintsN >= totalHints ? 'disabled' : '';
+
+  // Hints already shown
+  const hintsHTML = Array.from({length: hintsN}, (_, i) =>
+    `<div class="hint-item"><span class="hint-n">${i+1}</span><span>${ex.hints[i]}</span></div>`
+  ).join('');
+
+  // Solution button label
+  const solBtnLabel = state.solShown[k] ? '▲ Amagar solució' : '▼ Veure solució completa';
+  const solDisplay = state.solShown[k] ? 'block' : 'none';
+
+  // Check area
+  let checkHTML;
+  if (res) {
+    checkHTML = renderBadge(res) + `<button class="redo-btn" onclick="undoResult('${k}')">↩ Canviar</button>`;
+  } else {
+    checkHTML = `
+      <button class="check-ok" onclick="markResult('${k}','ok')">✓ Ho he encertat</button>
+      <button class="check-ko" onclick="markResult('${k}','ko')">✗ M'he equivocat</button>`;
+  }
 
   card.innerHTML = `
     <div class="ex-card-header">
@@ -879,54 +615,23 @@ function renderExercise(bi, ei, ex) {
     </div>
     <div class="ex-body">
       <hr class="divider">
-
-      <!-- HINTS -->
       <div class="hints-area">
-        <button class="hint-btn" onclick="showNextHint('${k}', ${ex.hints.length})">
-          <span class="hint-icon">💡</span> Vull una pista
-        </button>
-        <div class="hints-list" id="hints-${k}"></div>
+        <button class="hint-btn" id="hbtn-${k}" ${hintDisabled} onclick="showNextHint('${k}',${totalHints})">${hintLabel}</button>
+        <div class="hints-list" id="hints-${k}">${hintsHTML}</div>
       </div>
-
-      <!-- SOLUTION -->
       <div class="solution-area">
-        <button class="sol-btn" onclick="toggleSolution('${k}', ${bi}, ${ei})">
-          Veure solució completa
-        </button>
-        <div id="sol-${k}" style="display:none">
+        <button class="sol-btn" id="sbtn-${k}" onclick="toggleSolution('${k}')">${solBtnLabel}</button>
+        <div id="sol-${k}" style="display:${solDisplay}">
           <div class="sol-box">
             <div class="sol-title">Resolució pas a pas</div>
             ${ex.steps.map((s,i) => `<div class="sol-step"><span class="step-n">Pas ${i+1}:</span> ${s}</div>`).join('')}
+            ${ex.check ? `<div class="sol-check">🔍 ${ex.check}</div>` : ''}
             <div class="sol-final">✓ Resultat: ${ex.answer}</div>
           </div>
         </div>
       </div>
-
-      <!-- SELF CHECK -->
-      <div class="check-area" id="check-${k}">
-        ${res ? renderBadge(res) : `
-          <button class="check-ok" onclick="markResult('${k}', 'ok')">✓ Ho he encertat</button>
-          <button class="check-ko" onclick="markResult('${k}', 'ko')">✗ M'he equivocat</button>
-        `}
-      </div>
-    </div>
-  `;
-
-  // Restore hints
-  if (state.hintsShown[k]) {
-    const hintsDiv = card.querySelector(`#hints-${k}`);
-    for (let i = 0; i < state.hintsShown[k]; i++) {
-      const item = document.createElement('div');
-      item.className = 'hint-item';
-      item.innerHTML = `<span class="hint-n">${i+1}</span><span>${ex.hints[i]}</span>`;
-      hintsDiv.appendChild(item);
-    }
-  }
-
-  // Restore solution
-  if (state.solShown[k]) {
-    card.querySelector(`#sol-${k}`).style.display = 'block';
-  }
+      <div class="check-area" id="check-${k}">${checkHTML}</div>
+    </div>`;
 
   return card;
 }
@@ -951,38 +656,75 @@ function showNextHint(k, total) {
   item.innerHTML = `<span class="hint-n">${idx+1}</span><span>${hint}</span>`;
   hintsDiv.appendChild(item);
   state.hintsShown[k] = idx + 1;
+
+  // Update button
+  const btn = document.getElementById(`hbtn-${k}`);
+  if (state.hintsShown[k] >= total) {
+    btn.disabled = true;
+    btn.innerHTML = `<span style="color:var(--text3)">— No hi ha més pistes</span>`;
+  } else {
+    btn.innerHTML = `💡 Vull una pista (${state.hintsShown[k]}/${total})`;
+  }
 }
 
-function toggleSolution(k, bi, ei) {
+function toggleSolution(k) {
   const sol = document.getElementById(`sol-${k}`);
+  const btn = document.getElementById(`sbtn-${k}`);
   const isHidden = sol.style.display === 'none';
   sol.style.display = isHidden ? 'block' : 'none';
+  btn.textContent = isHidden ? '▲ Amagar solució' : '▼ Veure solució completa';
   state.solShown[k] = isHidden;
 }
 
 function markResult(k, res) {
   state.results[k] = res;
   const card = document.getElementById(`card-${k}`);
-  card.className = 'ex-card ' + (res === 'ok' ? 'solved' : 'wrong');
+  // Remove old flash classes
+  card.classList.remove('flash-ok', 'flash-ko', 'solved', 'wrong');
+  // Trigger reflow for animation restart
+  void card.offsetWidth;
+  card.classList.add(res === 'ok' ? 'solved' : 'wrong', res === 'ok' ? 'flash-ok' : 'flash-ko');
   const checkDiv = document.getElementById(`check-${k}`);
-  checkDiv.innerHTML = renderBadge(res);
+  checkDiv.innerHTML = renderBadge(res) + `<button class="redo-btn" onclick="undoResult('${k}')">↩ Canviar</button>`;
   updateScores();
+  updateTabProgress();
   renderStars();
 }
 
+function undoResult(k) {
+  delete state.results[k];
+  const card = document.getElementById(`card-${k}`);
+  card.classList.remove('solved', 'wrong', 'flash-ok', 'flash-ko');
+  const checkDiv = document.getElementById(`check-${k}`);
+  checkDiv.innerHTML = `
+    <button class="check-ok" onclick="markResult('${k}','ok')">✓ Ho he encertat</button>
+    <button class="check-ko" onclick="markResult('${k}','ko')">✗ M'he equivocat</button>`;
+  updateScores();
+  updateTabProgress();
+  renderStars();
+}
+
+// ============================================================
+// SCORES & PROGRESS
+// ============================================================
 function updateScores() {
   const vals = Object.values(state.results);
-  const ok = vals.filter(v => v === 'ok').length;
-  const ko = vals.filter(v => v === 'ko').length;
-  document.getElementById('score-ok').textContent = ok;
-  document.getElementById('score-ko').textContent = ko;
+  document.getElementById('score-ok').textContent = vals.filter(v=>v==='ok').length;
+  document.getElementById('score-ko').textContent = vals.filter(v=>v==='ko').length;
+}
+
+function updateTabProgress() {
+  BLOCKS.forEach((block, bi) => {
+    const total = block.exercises.length;
+    const done = block.exercises.filter((_, ei) => state.results[key(bi,ei)] === 'ok').length;
+    const el = document.getElementById(`prog${bi}`);
+    if (el) el.textContent = `${done}/${total}`;
+  });
 }
 
 function renderStars() {
-  const vals = Object.values(state.results);
-  const ok = vals.filter(v => v === 'ok').length;
-  const total = 25;
-  const stars5 = Math.round((ok / total) * 5);
+  const ok = Object.values(state.results).filter(v=>v==='ok').length;
+  const stars5 = Math.round((ok / 25) * 5);
   const container = document.getElementById('stars-global');
   container.innerHTML = '';
   for (let i = 0; i < 5; i++) {
@@ -997,12 +739,9 @@ function renderStars() {
 // TABS
 // ============================================================
 function showSection(idx) {
-  document.querySelectorAll('.section').forEach((s, i) => {
-    s.classList.toggle('active', i === idx);
-  });
-  document.querySelectorAll('.tab-btn').forEach((b, i) => {
-    b.classList.toggle('active', i === idx);
-  });
+  state.activeSection = idx;
+  document.querySelectorAll('.section').forEach((s,i) => s.classList.toggle('active', i===idx));
+  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', i===idx));
 }
 
 // ============================================================
@@ -1014,11 +753,10 @@ function resetAll() {
   state.hintsShown = {};
   state.solShown = {};
   renderAll();
+  showSection(state.activeSection);
 }
 
-// ============================================================
 // INIT
-// ============================================================
 renderAll();
 </script>
 </body>
